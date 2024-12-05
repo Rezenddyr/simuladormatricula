@@ -21,6 +21,10 @@ import MuiCard, { CardProps } from '@mui/material/Card'
 import InputAdornment from '@mui/material/InputAdornment'
 import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
+import Radio from '@mui/material/Radio';
+import RadioGroup from '@mui/material/RadioGroup';
+import FormLabel from '@mui/material/FormLabel';
+
 // ** Icon Imports
 import Icon from '@/utils/icon'
 
@@ -50,7 +54,7 @@ const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ t
   }
 }))
 
-const Login = () => {
+const Cadastro = () => {
   // ** State
   const [values, setValues] = useState<State>({
     password: '',
@@ -84,7 +88,7 @@ const Login = () => {
             <Typography variant='h5' sx={{ fontWeight: 600, mb: 1.5 }}>
               Bem vindo ao {themeConfig.templateName}! 👋🏻
             </Typography>
-            <Typography variant='body2'>Logue e simule as matérias que vai pegar no proximo periodo</Typography>
+            <Typography variant='body2'>Crie sua conta e simule as matérias que vai pegar no proximo periodo</Typography>
           </Box>
           <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
             <TextField autoFocus fullWidth id='email' label='Email' sx={{ mb: 4 }} />
@@ -119,18 +123,27 @@ const Login = () => {
                 justifyContent: 'space-between'
               }}
             >
-              <FormControlLabel control={<Checkbox />} label='Lembre de mim' />
-              <LinkStyled href='/pages/auth/forgot-password-v1'>Esqueceu sua senha?</LinkStyled>
+              <FormControl>
+                <FormLabel id="demo-row-radio-buttons-group-label">Tipo de usuario</FormLabel>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel value="female" control={<Radio />} label="Female" />
+                  <FormControlLabel value="male" control={<Radio />} label="Male" />
+                </RadioGroup>
+              </FormControl>
             </Box>
             <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
-              Logar
+              Cadastrar
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
               <Typography variant='body2' sx={{ mr: 2 }}>
-                Novo na plataforma?
+                Já tem conta?
               </Typography>
               <Typography variant='body2'>
-                <LinkStyled href='cadastro'>Crie sua conta</LinkStyled>
+                <LinkStyled href='login'>Logar</LinkStyled>
               </Typography>
             </Box>
           </form>
@@ -141,4 +154,4 @@ const Login = () => {
 }
 
 
-export default Login
+export default Cadastro
