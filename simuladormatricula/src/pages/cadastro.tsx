@@ -1,157 +1,256 @@
-// ** React Imports
-import { ChangeEvent, ReactNode, useState } from 'react'
+import React, { useState } from 'react';
+import {
+  Box,
+  Card,
+  CardContent,
+  TextField,
+  Button,
+  Typography,
+  InputAdornment,
+  IconButton,
+} from '@mui/material';
+import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { CssBaseline } from '@mui/material';
+import Link from '@mui/material/Link';
 
-// ** Next Import
-import Link from 'next/link'
+const theme = createTheme({
+  palette: {
+    background: {
+      default: '#00111F', // Cor de fundo geral
+    },
+    primary: {
+      main: '#0085EA',
+    },
+  },
+  typography: {
+    fontFamily: 'Archivo, sans-serif',
+  },
+});
 
-// ** MUI Components
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
-import InputLabel from '@mui/material/InputLabel'
-import Typography from '@mui/material/Typography'
-import IconButton from '@mui/material/IconButton'
-import CardContent from '@mui/material/CardContent'
-import FormControl from '@mui/material/FormControl'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import { styled, useTheme } from '@mui/material/styles'
-import MuiCard, { CardProps } from '@mui/material/Card'
-import InputAdornment from '@mui/material/InputAdornment'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
+const Cadastro: React.FC = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [matricula, setMatricula] = useState('');
+  const [senha, setSenha] = useState('');
+  const [confirmSenha, setConfirmSenha] = useState('');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
 
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormLabel from '@mui/material/FormLabel';
+  const [matriculaError, setMatriculaError] = useState(false);
+  const [senhaError, setSenhaError] = useState(false);
+  const [confirmSenhaError, setConfirmSenhaError] = useState(false);
+  const [nomeError, setNomeError] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
-// ** Icon Imports
-import Icon from '@/utils/icon'
-
-// ** Configs
-import themeConfig from '@/utils/themeConfig'
-
-interface State {
-  password: string
-  showPassword: boolean
-}
-
-// ** Styled Components
-const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
-  [theme.breakpoints.up('sm')]: { width: '28rem' }
-}))
-
-const LinkStyled = styled(Link)(({ theme }) => ({
-  fontSize: '0.875rem',
-  textDecoration: 'none',
-  color: theme.palette.primary.main
-}))
-
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
-
-const Cadastro = () => {
-  // ** State
-  const [values, setValues] = useState<State>({
-    password: '',
-    showPassword: false
-  })
-
-  // ** Hook
-  const theme = useTheme()
-
-  const handleChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-
-  const handleClickShowPassword = () => {
-    setValues({ ...values, showPassword: !values.showPassword })
-  }
+  const handleCadastro = () => {
+    setMatriculaError(matricula.length === 0);
+    setSenhaError(senha.length < 6);
+    setConfirmSenhaError(confirmSenha !== senha);
+    setNomeError(nome.length === 0);
+    setEmailError(!email.includes('@'));
+  };
 
   return (
-    <Box
-      className='content-center'
-      sx={{
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        minHeight: '90vh',
-      }}
-    >
-      <Card sx={{ zIndex: 1 }}>
-        <CardContent sx={{ p: theme => `${theme.spacing(12, 9, 7)} !important` }}>
-          <Box sx={{ mb: 6 }}>
-            <Typography variant='h5' sx={{ fontWeight: 600, mb: 1.5 }}>
-              Bem vindo ao {themeConfig.templateName}! 👋🏻
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          background: '#2980b9 url("https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png") repeat 0 0',
+          animation: '10s linear 0s normal none infinite animate',
+          '@keyframes animate': {
+            from: { backgroundPosition: '0 0' },
+            to: { backgroundPosition: '500px 0' },
+          },
+        }}
+      >
+        <Card
+          sx={{
+            width: 400,
+            padding: 4,
+            backgroundColor: '#00213A', // Cor de fundo do card de cadastro
+            borderRadius: 2,
+            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          <CardContent>
+            <Typography
+              variant="h5"
+              component="h1"
+              sx={{ textAlign: 'center', marginBottom: 2, color: '#FFFFFF' }}
+            >
+              Cadastro
             </Typography>
-            <Typography variant='body2'>Crie sua conta e simule as matérias que vai pegar no proximo periodo</Typography>
-          </Box>
-          <form noValidate autoComplete='off' onSubmit={e => e.preventDefault()}>
-            <TextField autoFocus fullWidth id='email' label='Email' sx={{ mb: 4 }} />
-            <FormControl fullWidth>
-              <InputLabel htmlFor='auth-login-password'>Senha</InputLabel>
-              <OutlinedInput
-                label='Password'
-                value={values.password}
-                id='auth-login-password'
-                onChange={handleChange('password')}
-                type={values.showPassword ? 'text' : 'password'}
-                endAdornment={
-                  <InputAdornment position='end'>
+            <TextField
+              label="Matrícula"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={matricula}
+              onChange={(e) => setMatricula(e.target.value)}
+              error={matriculaError}
+              helperText={matriculaError ? 'A matrícula é obrigatória.' : ''}
+              InputLabelProps={{ style: { color: '#94A3B8' } }}
+              sx={{
+                backgroundColor: '#00111F',
+                input: { color: '#FFFFFF' },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+              }}
+            />
+            <TextField
+              label="Nome"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={nome}
+              onChange={(e) => setNome(e.target.value)}
+              error={nomeError}
+              helperText={nomeError ? 'O nome é obrigatório.' : ''}
+              InputLabelProps={{ style: { color: '#94A3B8' } }}
+              sx={{
+                backgroundColor: '#00111F',
+                input: { color: '#FFFFFF' },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+              }}
+            />
+            <TextField
+              label="Email"
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              error={emailError}
+              helperText={emailError ? 'Inclua um "@" no endereço de e-mail.' : ''}
+              InputLabelProps={{ style: { color: '#94A3B8' } }}
+              sx={{
+                backgroundColor: '#00111F',
+                input: { color: '#FFFFFF' },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+              }}
+            />
+            <TextField
+              label="Senha"
+              type={showPassword ? 'text' : 'password'}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
+              error={senhaError}
+              helperText={
+                senhaError ? 'A senha deve ter pelo menos 6 caracteres.' : ''
+              }
+              InputLabelProps={{ style: { color: '#94A3B8' } }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
                     <IconButton
-                      edge='end'
-                      onClick={handleClickShowPassword}
-                      onMouseDown={e => e.preventDefault()}
-                      aria-label='toggle password visibility'
+                      onClick={() => setShowPassword(!showPassword)}
+                      edge="end"
                     >
-                      <Icon icon={values.showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                      {showPassword ? (
+                        <VisibilityOff style={{ color: '#94A3B8' }} />
+                      ) : (
+                        <Visibility style={{ color: '#94A3B8' }} />
+                      )}
                     </IconButton>
                   </InputAdornment>
-                }
-              />
-            </FormControl>
-            <Box
-              sx={{
-                mb: 4,
-                display: 'flex',
-                alignItems: 'center',
-                flexWrap: 'wrap',
-                justifyContent: 'space-between'
+                ),
               }}
+              sx={{
+                backgroundColor: '#00111F',
+                input: { color: '#FFFFFF' },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+              }}
+            />
+            <TextField
+              label="Confirmar Senha"
+              type={showConfirmPassword ? 'text' : 'password'}
+              variant="outlined"
+              fullWidth
+              margin="normal"
+              value={confirmSenha}
+              onChange={(e) => setConfirmSenha(e.target.value)}
+              error={confirmSenhaError}
+              helperText={confirmSenhaError ? 'As senhas não coincidem.' : ''}
+              InputLabelProps={{ style: { color: '#94A3B8' } }}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                      edge="end"
+                    >
+                      {showConfirmPassword ? (
+                        <VisibilityOff style={{ color: '#94A3B8' }} />
+                      ) : (
+                        <Visibility style={{ color: '#94A3B8' }} />
+                      )}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                backgroundColor: '#00111F',
+                input: { color: '#FFFFFF' },
+                '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+                '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                  borderColor: '#0085EA',
+                },
+              }}
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              fullWidth
+              sx={{ marginTop: 2, fontWeight: 'bold' }}
+              onClick={handleCadastro}
             >
-              <FormControl>
-                <FormLabel id="demo-row-radio-buttons-group-label">Tipo de usuario</FormLabel>
-                <RadioGroup
-                  row
-                  aria-labelledby="demo-row-radio-buttons-group-label"
-                  name="row-radio-buttons-group"
-                >
-                  <FormControlLabel value="female" control={<Radio />} label="Female" />
-                  <FormControlLabel value="male" control={<Radio />} label="Male" />
-                </RadioGroup>
-              </FormControl>
-            </Box>
-            <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
-              Cadastrar
+              Criar Conta
             </Button>
-            <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
-              <Typography variant='body2' sx={{ mr: 2 }}>
-                Já tem conta?
-              </Typography>
-              <Typography variant='body2'>
-                <LinkStyled href='login'>Logar</LinkStyled>
+            <Box sx={{ textAlign: 'center', marginTop: 2 }}>
+              <Typography sx={{ color: '#94A3B8' }}>
+                Já tem uma conta?{' '}
+                <Link
+                  href="/login"
+                  sx={{ color: '#0085EA', textDecoration: 'none' }}
+                >
+                  Faça login
+                </Link>
               </Typography>
             </Box>
-          </form>
-        </CardContent>
-      </Card>
-    </Box>
-  )
-}
+          </CardContent>
+        </Card>
+      </Box>
+    </ThemeProvider>
+  );
+};
 
-
-export default Cadastro
+export default Cadastro;

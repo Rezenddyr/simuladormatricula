@@ -1,68 +1,59 @@
-// ** React Imports
-import { ReactNode } from 'react'
+import React from 'react';
+import { Box, Typography, Button, Container } from '@mui/material';
+import { useRouter } from 'next/router';
 
-// ** Next Import
-import Link from 'next/link'
+const ErrorPage: React.FC = () => {
+  const router = useRouter();
 
-// ** MUI Components
-import Button from '@mui/material/Button'
-import { styled } from '@mui/material/styles'
-import Typography from '@mui/material/Typography'
-import Box, { BoxProps } from '@mui/material/Box'
+  // Função para redirecionar para a página inicial
+  const handleGoHome = () => {
+    router.push('/'); // Redireciona para a página inicial
+  };
 
-// ** Layout Import
-import BlankLayout from '@/utils/BlankLayout'
-
-// ** Styled Components
-const BoxWrapper = styled(Box)<BoxProps>(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
-    width: '90vw'
-  }
-}))
-
-const Img = styled('img')(({ theme }) => ({
-  marginBottom: theme.spacing(10),
-  [theme.breakpoints.down('lg')]: {
-    height: 450,
-    marginTop: theme.spacing(10)
-  },
-  [theme.breakpoints.down('md')]: {
-    height: 400
-  },
-  [theme.breakpoints.up('lg')]: {
-    marginTop: theme.spacing(13)
-  }
-}))
-
-const TreeIllustration = styled('img')(({ theme }) => ({
-  left: 0,
-  bottom: '5rem',
-  position: 'absolute',
-  [theme.breakpoints.down('lg')]: {
-    bottom: 0
-  }
-}))
-
-const Error404 = () => {
   return (
-    <Box className='content-center'>
-      <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
-        <BoxWrapper>
-          <Typography variant='h1'>404</Typography>
-          <Typography variant='h5' sx={{ mb: 1, fontSize: '1.5rem !important' }}>
-            Page Not Found ⚠️
-          </Typography>
-          <Typography variant='body2'>We couldn&prime;t find the page you are looking for.</Typography>
-        </BoxWrapper>
-        <Img height='487' alt='error-illustration' src='/images/pages/404.png' />
-        <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
-          Back to Home
+    <Container
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        backgroundColor: '#00111F',
+        color: '#FFFFFF',
+        textAlign: 'center',
+      }}
+    >
+      <Box
+        sx={{
+          backgroundColor: '#00213A',
+          padding: 4,
+          borderRadius: 2,
+          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+        }}
+      >
+        <Typography variant="h3" sx={{ marginBottom: 2, color: '#FF4747' }}>
+          Oops! Página não encontrada.
+        </Typography>
+        <Typography variant="h6" sx={{ marginBottom: 4 }}>
+          A página que você está procurando não existe ou foi movida.
+        </Typography>
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: '#0085EA',
+            color: '#FFFFFF',
+            '&:hover': {
+              backgroundColor: '#006BB3',
+            },
+            fontWeight: 'bold',
+          }}
+          onClick={handleGoHome}
+        >
+          Voltar para a página inicial
         </Button>
       </Box>
-    </Box>
-  )
-}
+    </Container>
+  );
+};
 
-Error404.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
-
-export default Error404
+export default ErrorPage;
