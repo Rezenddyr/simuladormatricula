@@ -105,8 +105,8 @@ const Login: React.FC = () => {
       >
         <Card
           sx={{
-            width: 400,
-            padding: 4,
+            width: 500,
+            padding: 2,
             backgroundColor: '#00213A', // Cor de fundo do card de login
             borderRadius: 2,
             boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
@@ -120,6 +120,21 @@ const Login: React.FC = () => {
             >
               Login
             </Typography>
+            <Link href="/" sx={{ display: 'block', textAlign: 'center', marginBottom: 2 }}>
+              <img
+                src="/images/logo.svg"  // Caminho da imagem ajustado para o diretório public/images/logo.jpeg
+                alt="Logo"
+                style={{
+                  height: 250, // Aumenta o tamanho da imagem
+                  width: 'auto', // Mantém a proporção
+                  display: 'block', // Centraliza a imagem
+                  marginLeft: 'auto', // Alinha à esquerda
+                  marginRight: 'auto', // Alinha à direita
+                  marginBottom: '20px', // Espaçamento inferior
+                  cursor: 'pointer', // Cursor em forma de mão para indicar que é clicável
+                }}
+              />
+            </Link>
             <TextField
               label="Email"
               variant="outlined"
@@ -128,9 +143,7 @@ const Login: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               error={emailError}
-              helperText={
-                emailError ? 'Inclua um "@" no endereço de e-mail.' : ''
-              }
+              helperText={emailError ? 'Inclua um "@" no endereço de e-mail.' : ''}
               InputLabelProps={{ style: { color: '#94A3B8' } }}
               sx={{
                 backgroundColor: '#00111F',
@@ -152,9 +165,7 @@ const Login: React.FC = () => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               error={passwordError}
-              helperText={
-                passwordError ? 'A senha deve ter pelo menos 6 caracteres.' : ''
-              }
+              helperText={passwordError ? 'A senha deve ter pelo menos 6 caracteres.' : ''}
               InputLabelProps={{ style: { color: '#94A3B8' } }}
               InputProps={{
                 endAdornment: (

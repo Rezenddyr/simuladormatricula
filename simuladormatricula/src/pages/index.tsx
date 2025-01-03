@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, CardContent, Typography, Grid, Avatar, LinearProgress, Menu, MenuItem, Fab, AppBar, Toolbar, IconButton } from '@mui/material';
+import { Box, Button, Card, CardContent, Typography, Grid, Avatar, LinearProgress, Menu, MenuItem, AppBar, Toolbar, IconButton, Link as MuiLink } from '@mui/material';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MenuIcon from '@mui/icons-material/Menu';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'; // Importação do Router
 
 const theme = createTheme({
   palette: {
@@ -58,21 +59,73 @@ const IndexPage: React.FC = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ minHeight: '100vh', background: '#2980b9 url("https://static.tumblr.com/03fbbc566b081016810402488936fbae/pqpk3dn/MRSmlzpj3/tumblr_static_bg3.png") repeat 0 0', animation: '10s linear 0s normal none infinite animate', '@keyframes animate': { from: { backgroundPosition: '0 0' }, to: { backgroundPosition: '500px 0' } } }}>
-        
+
         {/* Navbar */}
         <AppBar position="sticky" sx={{ backgroundColor: '#00213A' }}>
           <Toolbar>
-            <IconButton edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-              <MenuIcon />
+            {/* Logo à esquerda que leva para o index */}
+            <MuiLink href="/" sx={{ flexGrow: 1 }}>
+              <img
+                src="/images/logo.svg"  // Caminho da imagem ajustado para o diretório public/images/logo.jpeg
+                alt="Logo"
+                style={{ height: 50, cursor: 'pointer' }} // Ajuste o tamanho da logo
+              />
+            </MuiLink>
+
+            {/* Botões de Login e Cadastro à direita */}
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <MuiLink component="a" href="/login" style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#0085EA',
+                    color: '#FFFFFF',
+                    '&:hover': {
+                      backgroundColor: '#006BB3',
+                    },
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Login
+                </Button>
+              </MuiLink>
+
+              <MuiLink component="a" href="/cadastro" style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="contained"
+                  sx={{
+                    backgroundColor: '#0085EA',
+                    color: '#FFFFFF',
+                    '&:hover': {
+                      backgroundColor: '#006BB3',
+                    },
+                    fontWeight: 'bold',
+                  }}
+                >
+                  Cadastro
+                </Button>
+              </MuiLink>
+            </Box>
+
+            {/* Botão de notificação */}
+            <IconButton edge="end" color="inherit" onClick={handleClick}>
+              <NotificationsIcon />
             </IconButton>
-            <Typography variant="h6" sx={{ flexGrow: 1 }}>
-              Dashboard
-            </Typography>
-            <Button color="inherit" onClick={() => alert('Configurações')}>
-              Configurações
-            </Button>
           </Toolbar>
         </AppBar>
+
+        {/* Menu de notificações */}
+        <Menu
+          anchorEl={anchorEl}
+          open={Boolean(anchorEl)}
+          onClose={handleClose}
+        >
+          {notifications.map((notification, index) => (
+            <MenuItem key={index} onClick={handleClose}>
+              {notification}
+            </MenuItem>
+          ))}
+        </Menu>
 
         {/* Mini Perfil fixo no canto direito com largura aumentada */}
         <Box
@@ -196,111 +249,41 @@ const IndexPage: React.FC = () => {
               Funcionalidades
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: '#0085EA',
-                  color: '#FFFFFF',
-                  '&:hover': {
-                    backgroundColor: '#006BB3',
-                  },
-                  fontWeight: 'bold',
-                }}
-                onClick={() => handleButtonClick('Funcionalidade 1')}
-              >
-                Funcionalidade 1
-              </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: '#0085EA',
-                  color: '#FFFFFF',
-                  '&:hover': {
-                    backgroundColor: '#006BB3',
-                  },
-                  fontWeight: 'bold',
-                }}
-                onClick={() => handleButtonClick('Funcionalidade 2')}
-              >
-                Funcionalidade 2
-              </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: '#0085EA',
-                  color: '#FFFFFF',
-                  '&:hover': {
-                    backgroundColor: '#006BB3',
-                  },
-                  fontWeight: 'bold',
-                }}
-                onClick={() => handleButtonClick('Funcionalidade 3')}
-              >
-                Funcionalidade 3
-              </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: '#0085EA',
-                  color: '#FFFFFF',
-                  '&:hover': {
-                    backgroundColor: '#006BB3',
-                  },
-                  fontWeight: 'bold',
-                }}
-                onClick={() => handleButtonClick('Funcionalidade 4')}
-              >
-                Funcionalidade 4
-              </Button>
-              <Button
-                variant="contained"
-                fullWidth
-                sx={{
-                  backgroundColor: '#0085EA',
-                  color: '#FFFFFF',
-                  '&:hover': {
-                    backgroundColor: '#006BB3',
-                  },
-                  fontWeight: 'bold',
-                }}
-                onClick={() => handleButtonClick('Funcionalidade 5')}
-              >
-                Funcionalidade 5
-              </Button>
+              <MuiLink component="a" href="/minhasmaterias" style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    backgroundColor: '#0085EA',
+                    color: '#FFFFFF',
+                    '&:hover': {
+                      backgroundColor: '#006BB3',
+                    },
+                    fontWeight: 'bold',
+                  }}
+                >
+                Matérias Feitas
+                </Button>
+              </MuiLink>
+              <MuiLink component="a" href="/simular" style={{ textDecoration: 'none' }}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  sx={{
+                    backgroundColor: '#0085EA',
+                    color: '#FFFFFF',
+                    '&:hover': {
+                      backgroundColor: '#006BB3',
+                    },
+                    fontWeight: 'bold',
+                  }}
+                >
+                Simular Matrícula
+                </Button>
+              </MuiLink>
             </Box>
           </CardContent>
         </Card>
-
-        {/* Botão de notificação flutuante no canto inferior esquerdo */}
-        <Fab
-          color="primary"
-          sx={{
-            position: 'fixed',
-            bottom: 20,
-            left: 20,  // Mudamos para o canto inferior esquerdo
-            zIndex: 1000,
-          }}
-          onClick={handleClick}
-        >
-          <NotificationsIcon />
-        </Fab>
-
-        {/* Menu de notificações */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          {notifications.map((notification, index) => (
-            <MenuItem key={index} onClick={handleClose}>
-              {notification}
-            </MenuItem>
-          ))}
-        </Menu>
       </Box>
     </ThemeProvider>
   );
