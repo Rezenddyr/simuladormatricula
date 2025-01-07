@@ -20,6 +20,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import Header from '@/components/header';
 
 const theme = createTheme({
   palette: {
@@ -84,54 +85,8 @@ const MinhasMaterias: React.FC = () => {
         }}
       >
         {/* Navbar */}
-        <AppBar position="sticky" sx={{ backgroundColor: '#00213A' }}>
-          <Toolbar>
-            <MuiLink href="/" sx={{ flexGrow: 1 }}>
-              <img
-                src="/images/logo.svg"
-                alt="Logo"
-                style={{ height: 50, cursor: 'pointer' }}
-              />
-            </MuiLink>
+        <Header notifications={notifications} />
 
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <MuiLink component="a" href="/login" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: '#0085EA',
-                    color: '#FFFFFF',
-                    '&:hover': {
-                      backgroundColor: '#006BB3',
-                    },
-                    fontWeight: 'bold',
-                  }}
-                >
-                  Login
-                </Button>
-              </MuiLink>
-              <MuiLink component="a" href="/cadastro" style={{ textDecoration: 'none' }}>
-                <Button
-                  variant="contained"
-                  sx={{
-                    backgroundColor: '#0085EA',
-                    color: '#FFFFFF',
-                    '&:hover': {
-                      backgroundColor: '#006BB3',
-                    },
-                    fontWeight: 'bold',
-                  }}
-                >
-                  Cadastro
-                </Button>
-              </MuiLink>
-            </Box>
-
-            <IconButton edge="end" color="inherit" onClick={handleClick}>
-              <NotificationsIcon />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
 
         <Menu
           anchorEl={anchorEl}
@@ -220,7 +175,7 @@ const MinhasMaterias: React.FC = () => {
                   >
                     <AccordionSummary
                       sx={{
-                        backgroundColor: '#003B56', // Cor de fundo da summary
+                        backgroundColor: '#006BB3', // Cor de fundo da summary
                         color: '#FFFFFF', // Texto branco
                         '&.Mui-expanded': {
                           backgroundColor: '#006BB3', // Cor de fundo ao expandir
@@ -240,10 +195,9 @@ const MinhasMaterias: React.FC = () => {
                               display: 'flex',
                               justifyContent: 'space-between',
                               alignItems: 'center',
-                              padding: 2,
+                              padding: .5,
                               backgroundColor: '#00213A', // Fundo escuro
                               borderRadius: 1,
-                              boxShadow: 2, // Adiciona uma leve sombra
                             }}
                           >
                             <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>

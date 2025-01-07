@@ -1,45 +1,84 @@
-import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography } from '@mui/material';
-import { Menu as MenuIcon } from '@mui/icons-material';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import React, { useState } from 'react';
+import { AppBar, Toolbar, IconButton, Menu, MenuItem, Button, Box, Link as MuiLink } from '@mui/material';
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#0085EA',
-    },
-    background: {
-      default: '#00111F', // Cor de fundo do AppBar
-    },
-  },
-  typography: {
-    fontFamily: 'Archivo, sans-serif',
-  },
-});
+interface HeaderProps {
+  notifications: string[];
+}
 
-const Header: React.FC = () => {
+const Header: React.FC<HeaderProps> = ({ notifications }) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
-    <ThemeProvider theme={theme}>
-      <AppBar
-        position="static"
-        sx={{
-          backgroundColor: '#00213A',
-          boxShadow: 'none', // Removendo a sombra do AppBar
-          borderBottom: 'none', // Garantindo que não haja borda
-          margin: 0, // Removendo qualquer margem
-          padding: 0, // Removendo qualquer padding
-        }}
-      >
-        <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" sx={{ flexGrow: 1 }}>
-            Dashboard
-          </Typography>
-        </Toolbar>
-      </AppBar>
-    </ThemeProvider>
+    <AppBar position="sticky" sx={{ backgroundColor: '#00213A' }}>
+      <Toolbar>
+        {/* Logo à esquerda */}
+        <MuiLink href="/" sx={{ flexGrow: 1 }}>
+          <img
+            src="/images/logo.svg" // Caminho da imagem
+            alt="Logo"
+            style={{ height: 50, cursor: 'pointer' }}
+          />
+        </MuiLink>
+
+        {/* Botões de Login e Cadastro */}
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <MuiLink component="a" href="/login" style={{ textDecoration: 'none' }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#0085EA',
+                color: '#FFFFFF',
+                '&:hover': {
+                  backgroundColor: '#006BB3',
+                },
+                fontWeight: 'bold',
+              }}
+            >
+              Login
+            </Button>
+          </MuiLink>
+
+          <MuiLink component="a" href="/cadastro" style={{ textDecoration: 'none' }}>
+            <Button
+              variant="contained"
+              sx={{
+                backgroundColor: '#0085EA',
+                color: '#FFFFFF',
+                '&:hover': {
+                  backgroundColor: '#006BB3',
+                },
+                fontWeight: 'bold',
+              }}
+            >
+              Cadastro
+            </Button>
+          </MuiLink>
+        </Box>
+
+        {/* Botão de Notificação */}
+        <IconButton edge="end" color="inherit" onClick={handleClick}>
+          <NotificationsIcon />
+        </IconButton>
+
+        {/* Menu de Notificações */}
+        <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
+          {notifications.map((notification, index) => (
+            <MenuItem key={index} onClick={handleClose}>
+              {notification}
+            </MenuItem>
+          ))}
+        </Menu>
+      </Toolbar>
+    </AppBar>
   );
 };
 
