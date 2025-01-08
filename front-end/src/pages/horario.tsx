@@ -20,6 +20,7 @@ import {
   FormControlLabel,
 } from '@mui/material';
 import Header from '@/components/header';
+import Horarios from '@/components/tabelahorarios'
 
 const theme = createTheme({
   palette: {
@@ -54,7 +55,6 @@ const Horario: React.FC = () => {
     setAnchorEl(null);
   };
 
-
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -67,11 +67,12 @@ const Horario: React.FC = () => {
             from: { backgroundPosition: '0 0' },
             to: { backgroundPosition: '500px 0' },
           },
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         {/* Navbar */}
         <Header notifications={notifications} />
-
 
         <Menu
           anchorEl={anchorEl}
@@ -85,8 +86,28 @@ const Horario: React.FC = () => {
           ))}
         </Menu>
 
-        
-
+        {/* Central Area */}
+        <Box
+          sx={{
+            flex: 1,
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >
+          <Box
+            sx={{
+              backgroundColor: '#00213A',
+              color: '#FFFFFF',
+              padding: 4,
+              borderRadius: 2,
+              textAlign: 'center',
+              boxShadow: '0px 4px 10px rgba(0, 0, 0, 0.3)',
+            }}
+          >
+            <Horarios/>
+          </Box>
+        </Box>
       </Box>
     </ThemeProvider>
   );
