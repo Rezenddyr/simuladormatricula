@@ -21,16 +21,30 @@ CREATE TABLE IF NOT EXISTS `aluno` (
   `matricula` VARCHAR(255) NOT NULL,
   `senha` VARCHAR(255) NOT NULL,
   `nome` VARCHAR(255) NOT NULL,
-  `matricula` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id_aluno`))
-ENGINE = InnoDB;
+  PRIMARY KEY (`id_aluno`));
+
+
+  -- -----------------------------------------------------
+-- Table `professor`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `professor`;
+
+CREATE TABLE IF NOT EXISTS `professor` (
+  `id_professor` INT NOT NULL AUTO_INCREMENT,
+  `nome` VARCHAR(255) NOT NULL,
+  `senha` VARCHAR(45) NOT NULL,
+  `ingresso` VARCHAR(255) NOT NULL,
+  `vinculo` VARCHAR(255) NOT NULL,
+  `email` VARCHAR(255) NOT NULL,
+  PRIMARY KEY (`id_professor`)
+) ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
 -- Table `materia`
 -- -----------------------------------------------------
-DROP TABLE IF EXISTS `materia` ;
+DROP TABLE IF EXISTS `materia`;
 
 CREATE TABLE IF NOT EXISTS `materia` (
   `codigo` VARCHAR(255) NOT NULL,
@@ -44,13 +58,13 @@ CREATE TABLE IF NOT EXISTS `materia` (
   `componente` VARCHAR(255) NOT NULL,
   `id_professor` INT NOT NULL,
   PRIMARY KEY (`codigo`, `id_professor`),
-  INDEX `fk_materia_professor1_idx` (`id_professor` ASC) VISIBLE,
+  INDEX `fk_materia_professor1_idx` (`id_professor` ASC),
   CONSTRAINT `fk_materia_professor`
     FOREIGN KEY (`id_professor`)
     REFERENCES `professor` (`id_professor`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
 
 
 -- -----------------------------------------------------
@@ -59,41 +73,25 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `matriculas` ;
 
 CREATE TABLE IF NOT EXISTS `matriculas` (
-  `id_matricula` INT NOT NULL,
-  `fk_id_aluno` INT NOT NULL,
-  `id_matricula` VARCHAR(255) NOT NULL,
+  `id_matricula` INT NOT NULL AUTO_INCREMENT,
+  `id_aluno` INT NOT NULL,
+  `codigo_materia` VARCHAR(255) NOT NULL,
   `data_cadastro` VARCHAR(45) NOT NULL,
-  INDEX `fk_codigo_materia_idx` (`id_matricula` ASC) VISIBLE,
+  INDEX `fk_codigo_materia_idx` (`id_matricula` ASC),
   PRIMARY KEY (`id_matricula`),
   CONSTRAINT `fk_id_aluno`
-    FOREIGN KEY (`fk_id_aluno`)
+    FOREIGN KEY (`id_aluno`)
     REFERENCES `aluno` (`id_aluno`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_codigo_materia`
-    FOREIGN KEY (`id_matricula`)
+    FOREIGN KEY (`codigo_materia`)
     REFERENCES `materia` (`codigo`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
-
--- -----------------------------------------------------
--- Table `professor`
--- -----------------------------------------------------
-DROP TABLE IF EXISTS `professor` ;
-
-CREATE TABLE IF NOT EXISTS `professor` (
-  `id_professor` INT NOT NULL AUTO_INCREMENT,
-  `nome` VARCHAR(255) NOT NULL,
-  `senha` VARCHAR(45) NOT NULL,
-  `ingresso` VARCHAR(255) NOT NULL,
-  `vinculo` VARCHAR(255) NOT NULL,
-  `emil` VARCHAR(255) NOT NULL,
-  PRIMARY KEY (`id_professor`))
-ENGINE = InnoDB;
-
-
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
