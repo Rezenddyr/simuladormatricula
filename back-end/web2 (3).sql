@@ -33,7 +33,6 @@ DROP TABLE IF EXISTS `professor`;
 CREATE TABLE IF NOT EXISTS `professor` (
   `id_professor` INT NOT NULL AUTO_INCREMENT,
   `nome` VARCHAR(255) NOT NULL,
-  `senha` VARCHAR(45) NOT NULL,
   `ingresso` VARCHAR(255) NOT NULL,
   `vinculo` VARCHAR(255) NOT NULL,
   `email` VARCHAR(255) NOT NULL,
