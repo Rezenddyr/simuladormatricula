@@ -70,6 +70,11 @@ const MinhasMaterias: React.FC = () => {
     setSelectedSubject(null);
   };
 
+  const handleDeleteSubject = (subject: string) => {
+    console.log(`Matéria ${subject} excluída.`);
+    // Aqui você pode adicionar a lógica para excluir a matéria da lista
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -203,6 +208,91 @@ const MinhasMaterias: React.FC = () => {
                             <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <Checkbox sx={{ color: '#0085EA' }} />
+                              <Button
+                                variant="outlined"
+                                onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
+                                sx={{
+                                  marginLeft: 2,
+                                  borderColor: '#006BB3',
+                                  color: '#006BB3',
+                                  '&:hover': {
+                                    borderColor: '#0085EA',
+                                    color: '#0085EA',
+                                  },
+                                }}
+                              >
+                                Ver Detalhes
+                              </Button>
+                            </Box>
+                          </Box>
+                        ))}
+                      </Box>
+                    </AccordionDetails>
+                  </Accordion>
+                ))}
+              </Box>
+            )}
+
+{activeTab === 'feitas' && (
+              <Box sx={{ width: '100%' }}>
+                {[...Array(11).keys()].map((index) => (
+                  <Accordion
+                    key={index}
+                    sx={{
+                      backgroundColor: '#003B56', // Cor de fundo escura
+                      borderRadius: 1,
+                      '&:before': {
+                        display: 'none', // Remove a linha de borda padrão
+                      },
+                      boxShadow: 'none', // Retira sombra
+                      '&.Mui-expanded': {
+                        backgroundColor: '#006BB3', // Cor quando expandido
+                      },
+                    }}
+                  >
+                    <AccordionSummary
+                      sx={{
+                        backgroundColor: '#006BB3', // Cor de fundo da summary
+                        color: '#FFFFFF', // Texto branco
+                        '&.Mui-expanded': {
+                          backgroundColor: '#006BB3', // Cor de fundo ao expandir
+                        },
+                      }}
+                    >
+                      <Typography sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                        {index + 1 === 11 ? 'Optativas' : `Período ${index + 1}`}
+                      </Typography>
+                    </AccordionSummary>
+                    <AccordionDetails sx={{ backgroundColor: '#00213A', color: '#FFFFFF' }}>
+                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                        {[...Array(5).keys()].map((subjectIndex) => (
+                          <Box
+                            key={subjectIndex}
+                            sx={{
+                              display: 'flex',
+                              justifyContent: 'space-between',
+                              alignItems: 'center',
+                              padding: .5,
+                              backgroundColor: '#00213A', // Fundo escuro
+                              borderRadius: 1,
+                            }}
+                          >
+                            <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <Button
+                                onClick={() => handleDeleteSubject(`Matéria ${subjectIndex + 1}`)}
+                                sx={{
+                                  marginLeft: 2,
+                                  borderColor: '#FF0000',
+                                  color: '#FF0000',
+                                  '&:hover': {
+                                    borderColor: '#FF5733',
+                                    color: '#FF5733',
+                                  },
+                                }}
+                              >
+                                X
+                              </Button>
                               <Button
                                 variant="outlined"
                                 onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}

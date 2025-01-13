@@ -36,13 +36,13 @@ const IndexPage: React.FC = () => {
     matricula: "123456",
     curso: "Engenharia de Computação",
     integralizacoes: {
-      chObrigatoriaPendente: 180,
-      chOptativaPendente: 90,
-      chTotalCurriculo: 2000,
-      chComplementarPendente: 120,
-      chFlexibilizadaPendente: 150,
+      chObrigatoriaPendente: 3060,
+      chOptativaPendente: 540,
+      chTotalCurriculo: 3600,
+      // chComplementarPendente: 120,
+      // chFlexibilizadaPendente: 150,
     },
-    percentualConcluido: 45,
+    percentualConcluido: 0,
   };
 
   return (

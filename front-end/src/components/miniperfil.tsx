@@ -8,8 +8,8 @@ interface UserData {
     chObrigatoriaPendente: number;
     chOptativaPendente: number;
     chTotalCurriculo: number;
-    chComplementarPendente: number;
-    chFlexibilizadaPendente: number;
+    // chComplementarPendente: number;
+    // chFlexibilizadaPendente: number;
   };
   percentualConcluido: number;
 }
@@ -88,12 +88,12 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
         <Typography sx={{ color: '#FFFFFF' }}>
           CH. Total Currículo: {userData.integralizacoes.chTotalCurriculo} horas
         </Typography>
-        <Typography sx={{ color: '#FFFFFF' }}>
+        {/* <Typography sx={{ color: '#FFFFFF' }}>
           CH. Complementar Pendente: {userData.integralizacoes.chComplementarPendente} horas
         </Typography>
         <Typography sx={{ color: '#FFFFFF' }}>
           CH. Flexibilizada Pendente: {userData.integralizacoes.chFlexibilizadaPendente} horas
-        </Typography>
+        </Typography> */}
 
         {/* Barra de progresso */}
         <Box sx={{ marginTop: 2 }}>
