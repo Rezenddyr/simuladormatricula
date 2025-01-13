@@ -57,6 +57,7 @@ CREATE TABLE IF NOT EXISTS `materia` (
   `componente` VARCHAR(255) NOT NULL,
   `id_professor` INT NOT NULL,
   PRIMARY KEY (`codigo`, `id_professor`),
+  UNIQUE (`codigo`), -- Adiciona índice único
   INDEX `fk_materia_professor1_idx` (`id_professor` ASC),
   CONSTRAINT `fk_materia_professor`
     FOREIGN KEY (`id_professor`)
@@ -64,7 +65,6 @@ CREATE TABLE IF NOT EXISTS `materia` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
-
 
 -- -----------------------------------------------------
 -- Table `matriculas`

@@ -1,9 +1,12 @@
 <?php
 
+//acessar o banco : mysql -u root -p
+//ligar servidor : php -S localhost:8000   
+
 class DataBase {
     private $ip_host = "localhost";
-    private $database = "test";
-    private $user = ""; // Defina o usuário do banco
+    private $database = "simuladormatricula";
+    private $user = "root"; // Defina o usuário do banco
     private $password = ""; // Defina a senha do banco
 
     public $conn;
@@ -19,10 +22,10 @@ class DataBase {
             );
             $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
             $this->conn->exec("SET NAMES utf8"); // Configura o charset
-            echo "Conexão realizada com sucesso!";
+            //echo "Conexão realizada com sucesso!";
         } catch (PDOException $exception) {
-            // Trata o erro de conexão
             echo "Não foi possível conectar. Erro: " . $exception->getMessage();
+            exit; // Saia para evitar JSON inválido
         }
         return $this->conn;
     }
