@@ -33,17 +33,18 @@ const IndexPage: React.FC = () => {
   ];
 
   const userData = {
+    nome: "Usuário Exemplo", // Adiciona o nome
+    email: "exemplo@dominio.com", // Adiciona o email
     matricula: "123456",
     curso: "Engenharia de Computação",
     integralizacoes: {
       chObrigatoriaPendente: 3060,
       chOptativaPendente: 540,
       chTotalCurriculo: 3600,
-      // chComplementarPendente: 120,
-      // chFlexibilizadaPendente: 150,
     },
-    percentualConcluido: 0,
+    percentualConcluido: 0, // Atualize para exibir progresso
   };
+
 
   return (
     <ThemeProvider theme={theme}>

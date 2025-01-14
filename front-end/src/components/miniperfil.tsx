@@ -1,5 +1,6 @@
-import React from 'react';
-import { Box, Avatar, Typography, Button, LinearProgress } from '@mui/material';
+import React, { useState } from 'react';
+import { Box, Avatar, Typography, Button, LinearProgress, Modal, TextField, IconButton, InputAdornment } from '@mui/material';
+import { Visibility, VisibilityOff, ExitToApp } from '@mui/icons-material'; // Importando o ícone ExitToApp
 
 interface UserData {
   matricula: string;
@@ -8,8 +9,6 @@ interface UserData {
     chObrigatoriaPendente: number;
     chOptativaPendente: number;
     chTotalCurriculo: number;
-    // chComplementarPendente: number;
-    // chFlexibilizadaPendente: number;
   };
   percentualConcluido: number;
 }
@@ -19,6 +18,27 @@ interface MiniPerfilProps {
 }
 
 const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
+  const [openModal, setOpenModal] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [matricula, setMatricula] = useState(userData.matricula);
+  const [senha, setSenha] = useState('');
+  const [nome, setNome] = useState('');
+  const [email, setEmail] = useState('');
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
+
+  const handleEditProfile = () => {
+    alert('Perfil editado com sucesso!');
+    handleCloseModal();
+  };
+
+  const handleLogout = () => {
+    // Lógica de logout (exemplo com alert)
+    alert('Você foi deslogado!');
+    // Aqui você pode adicionar sua lógica de logout, como limpar o token, redirecionar, etc.
+  };
+
   return (
     <Box
       sx={{
@@ -63,7 +83,7 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
           fontWeight: 'bold',
         }}
         fullWidth
-        onClick={() => alert('Editar perfil')}
+        onClick={handleOpenModal}
       >
         Editar Perfil
       </Button>
@@ -88,12 +108,6 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
         <Typography sx={{ color: '#FFFFFF' }}>
           CH. Total Currículo: {userData.integralizacoes.chTotalCurriculo} horas
         </Typography>
-        {/* <Typography sx={{ color: '#FFFFFF' }}>
-          CH. Complementar Pendente: {userData.integralizacoes.chComplementarPendente} horas
-        </Typography>
-        <Typography sx={{ color: '#FFFFFF' }}>
-          CH. Flexibilizada Pendente: {userData.integralizacoes.chFlexibilizadaPendente} horas
-        </Typography> */}
 
         {/* Barra de progresso */}
         <Box sx={{ marginTop: 2 }}>
@@ -107,6 +121,149 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
           />
         </Box>
       </Box>
+
+      <Modal
+        open={openModal}
+        onClose={handleCloseModal}
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}
+      >
+        <Box
+          sx={{
+            backgroundColor: '#00213A',
+            padding: 3,
+            borderRadius: 2,
+            width: 400,
+            boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
+          }}
+        >
+          <Typography variant="h6" sx={{ color: '#FFFFFF', marginBottom: 2, textAlign: 'center' }}>
+            Editar Perfil
+          </Typography>
+
+          <TextField
+            label="Matrícula"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={matricula}
+            onChange={(e) => setMatricula(e.target.value)}
+            InputLabelProps={{ style: { color: '#94A3B8' } }}
+            sx={{
+              backgroundColor: '#00111F',
+              input: { color: '#FFFFFF' },
+              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+            }}
+          />
+          <TextField
+            label="Nome"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={nome}
+            onChange={(e) => setNome(e.target.value)}
+            InputLabelProps={{ style: { color: '#94A3B8' } }}
+            sx={{
+              backgroundColor: '#00111F',
+              input: { color: '#FFFFFF' },
+              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+            }}
+          />
+          <TextField
+            label="Email"
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            InputLabelProps={{ style: { color: '#94A3B8' } }}
+            sx={{
+              backgroundColor: '#00111F',
+              input: { color: '#FFFFFF' },
+              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+            }}
+          />
+          <TextField
+            label="Senha"
+            type={showPassword ? 'text' : 'password'}
+            variant="outlined"
+            fullWidth
+            margin="normal"
+            value={senha}
+            onChange={(e) => setSenha(e.target.value)}
+            InputLabelProps={{ style: { color: '#94A3B8' } }}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    {showPassword ? <VisibilityOff style={{ color: '#94A3B8' }} /> : <Visibility style={{ color: '#94A3B8' }} />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              backgroundColor: '#00111F',
+              input: { color: '#FFFFFF' },
+              '& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+              '& .Mui-focused .MuiOutlinedInput-notchedOutline': {
+                borderColor: '#0085EA',
+              },
+            }}
+          />
+
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            onClick={handleEditProfile}
+            sx={{
+              marginTop: 2,
+              padding: 1.5,
+              backgroundColor: '#0085EA',
+              '&:hover': { backgroundColor: '#006BB3' },
+            }}
+          >
+            Salvar Alterações
+          </Button>
+        </Box>
+      </Modal>
+
+      {/* Botão de Sair */}
+      <IconButton
+        onClick={handleLogout}
+        sx={{
+          position: 'fixed',
+          bottom: 20,
+          right: 20,
+          backgroundColor: '#0085EA',
+          color: '#FFFFFF',
+          '&:hover': {
+            backgroundColor: '#006BB3',
+          },
+        }}
+      >
+        <ExitToApp />
+      </IconButton>
     </Box>
   );
 };

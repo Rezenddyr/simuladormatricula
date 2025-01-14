@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "axios": "^1.7.9",
     "react-perfect-scrollbar": "^1.5.8"
   }
 }
