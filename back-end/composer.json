@@ -1,0 +1,12 @@
+{
+    "name": "arthur/back-end",
+    "autoload": {
+        "psr-4": {
+            "app\\":"app"
+        }
+    },
+    "require": {
+        "firebase/php-jwt": "^6.10",
+        "vlucas/phpdotenv": "^5.6"
+    }
+}

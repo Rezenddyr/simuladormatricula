@@ -1,8 +1,11 @@
 import React, { useState } from 'react';
 import { Box, Avatar, Typography, Button, LinearProgress, Modal, TextField, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff, ExitToApp } from '@mui/icons-material'; // Importando o ícone ExitToApp
+import { useRouter } from "next/router";
 
 interface UserData {
+  nome: string,
+  email: string,
   matricula: string;
   curso: string;
   integralizacoes: {
@@ -18,17 +21,19 @@ interface MiniPerfilProps {
 }
 
 const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
+  const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [matricula, setMatricula] = useState(userData.matricula);
   const [senha, setSenha] = useState('');
-  const [nome, setNome] = useState('');
-  const [email, setEmail] = useState('');
+  const [nome, setNome] = useState(userData.nome);
+  const [email, setEmail] = useState(userData.email);
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
   const handleEditProfile = () => {
+    
     alert('Perfil editado com sucesso!');
     handleCloseModal();
   };
@@ -36,6 +41,11 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
   const handleLogout = () => {
     // Lógica de logout (exemplo com alert)
     alert('Você foi deslogado!');
+    sessionStorage.clear() // Limpa o token do sessionStorage
+    router.push({
+      pathname: '/',
+    });
+
     // Aqui você pode adicionar sua lógica de logout, como limpar o token, redirecionar, etc.
   };
 
@@ -66,10 +76,10 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
         U
       </Avatar>
       <Typography variant="h6" sx={{ color: '#FFFFFF', marginBottom: 1 }}>
-        Usuário Exemplo
+        {userData.nome}
       </Typography>
       <Typography sx={{ color: '#94A3B8', marginBottom: 2 }}>
-        exemplo@dominio.com
+        {userData.email}
       </Typography>
       <Button
         variant="outlined"

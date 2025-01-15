@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once 'banco.php';
+require_once '../config/banco.php';
 
 $banco = new DataBase();
 $conn = $banco->getConn();
