@@ -2,7 +2,7 @@
     "name": "arthur/back-end",
     "autoload": {
         "psr-4": {
-            "app\\":"app"
+            "app\\":"src/"
         }
     },
     "require": {
