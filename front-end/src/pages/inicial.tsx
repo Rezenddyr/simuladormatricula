@@ -25,8 +25,7 @@ const theme = createTheme({
 
 const IndexPage: React.FC = () => {
   const router = useRouter();
-  const { nome, email, matricula, notAuthorized } = router.query; // Captura 'nome' da navegação
-
+  const { id, nome, email, matricula, notAuthorized } = router.query; // Captura 'nome' da navegação
   const notifications = [
     "Você tem uma nova mensagem.",
     "Sua matrícula foi confirmada.",
@@ -35,6 +34,7 @@ const IndexPage: React.FC = () => {
   ];
 
   const userData = {
+    id: id as string, // Adiciona o id
     nome: nome as string, // Adiciona o nome
     email: email as string, // Adiciona o email
     matricula: matricula as string,

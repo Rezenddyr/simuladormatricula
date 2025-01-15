@@ -67,7 +67,7 @@ const Cadastro: React.FC = () => {
       !emailErro
     ) {
       try {
-        const response = await fetch(API.URL + "src/Cadastro.php", {
+        const response = await fetch(API.URL + "src/aluno/Cadastro.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
