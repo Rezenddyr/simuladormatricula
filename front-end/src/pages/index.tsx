@@ -66,7 +66,6 @@ export const Login: React.FC = () => {
         if (response.ok && !data.error) {
           alert(`Bem-vindo, ${data.user}!`);
           sessionStorage.setItem("token", data.token);
-          console.log(data.user);
           router.push({
             pathname: "/inicial",
             
