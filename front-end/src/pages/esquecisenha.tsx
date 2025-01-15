@@ -153,7 +153,7 @@ const EsqueciSenha: React.FC = () => {
             <Box sx={{ textAlign: 'center', marginTop: 2 }}>
               <Typography sx={{ color: '#94A3B8' }}>
                 Lembrou sua senha?{' '}
-                <Link href="/login" sx={{ color: '#0085EA', textDecoration: 'none' }}>
+                <Link href="/" sx={{ color: '#0085EA', textDecoration: 'none' }}>
                   Voltar para login
                 </Link>
               </Typography>

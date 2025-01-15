@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { Box, ThemeProvider, CssBaseline } from "@mui/material";
 import { createTheme } from "@mui/material/styles";
+import Login from "./index";
 import Header from "@/components/header";
 import MiniPerfil from "@/components/miniperfil";
 import Funcionalidades from "@/components/funcionalidades";
 import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
+import { isAuthorized } from "../utils/auth";
 
 const theme = createTheme({
   palette: {
@@ -23,7 +25,7 @@ const theme = createTheme({
 
 const IndexPage: React.FC = () => {
   const router = useRouter();
-  const { nome } = router.query; // Captura 'nome' da navegação
+  const { nome, email, matricula, notAuthorized } = router.query; // Captura 'nome' da navegação
 
   const notifications = [
     "Você tem uma nova mensagem.",
@@ -33,9 +35,9 @@ const IndexPage: React.FC = () => {
   ];
 
   const userData = {
-    nome: "Usuário Exemplo", // Adiciona o nome
-    email: "exemplo@dominio.com", // Adiciona o email
-    matricula: "123456",
+    nome: nome as string, // Adiciona o nome
+    email: email as string, // Adiciona o email
+    matricula: matricula as string,
     curso: "Engenharia de Computação",
     integralizacoes: {
       chObrigatoriaPendente: 3060,
@@ -45,7 +47,9 @@ const IndexPage: React.FC = () => {
     percentualConcluido: 0, // Atualize para exibir progresso
   };
 
-
+  if (isAuthorized() == false) {
+    return <Login />
+  }
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

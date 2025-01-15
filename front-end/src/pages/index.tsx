@@ -12,11 +12,13 @@ import {
   IconButton,
   FormHelperText,
   Link,
+  Alert
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import { useRouter } from "next/router";
+import * as API from "../utils/api";
 
 const theme = createTheme({
   palette: {
@@ -32,8 +34,9 @@ const theme = createTheme({
   },
 });
 
-const Login: React.FC = () => {
+export const Login: React.FC = () => {
   const router = useRouter();
+  const { notAuthorized } = router.query;
   const [showPassword, setShowPassword] = useState(false);
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
@@ -46,7 +49,7 @@ const Login: React.FC = () => {
 
     if (!emailError && !passwordError) {
       try {
-        const response = await fetch("http://localhost:8000/Login.php", {
+        const response = await fetch(API.URL + "src/Login.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -62,9 +65,16 @@ const Login: React.FC = () => {
 
         if (response.ok && !data.error) {
           alert(`Bem-vindo, ${data.user}!`);
+          sessionStorage.setItem("token", data.token);
+          console.log(data.user);
           router.push({
             pathname: "/inicial",
-            query: { nome: data.user },
+            
+            query: { nome: data.user,
+                     email: data.email,
+                     matricula: data.matricula,
+              
+             },
           });
         } else {
           alert(data.error || "Erro ao realizar login.");
@@ -146,6 +156,11 @@ const Login: React.FC = () => {
           }}
         >
           <CardContent>
+            {notAuthorized && (
+              <Alert severity="error" sx={{ marginBottom: 2 }}>
+                Acesso não autorizado. Faça login para continuar.
+              </Alert>
+            )}
             <Typography
               variant="h5"
               component="h1"
@@ -187,9 +202,9 @@ const Login: React.FC = () => {
                 backgroundColor: "#00111F",
                 input: { color: "#FFFFFF" },
                 "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                  {
-                    borderColor: "#0085EA",
-                  },
+                {
+                  borderColor: "#0085EA",
+                },
                 "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#0085EA",
                 },
@@ -228,9 +243,9 @@ const Login: React.FC = () => {
                 backgroundColor: "#00111F",
                 input: { color: "#FFFFFF" },
                 "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                  {
-                    borderColor: "#0085EA",
-                  },
+                {
+                  borderColor: "#0085EA",
+                },
                 "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
                   borderColor: "#0085EA",
                 },

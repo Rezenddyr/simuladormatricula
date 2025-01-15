@@ -13,6 +13,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
 import Link from "@mui/material/Link";
+import * as API from "../utils/api";
 
 const theme = createTheme({
   palette: {
@@ -66,7 +67,7 @@ const Cadastro: React.FC = () => {
       !emailErro
     ) {
       try {
-        const response = await fetch("http://localhost:8000/Cadastro.php", {
+        const response = await fetch(API.URL + "src/Cadastro.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -313,7 +314,7 @@ const Cadastro: React.FC = () => {
               <Typography sx={{ color: "#94A3B8" }}>
                 Já tem uma conta?{" "}
                 <Link
-                  href="/login"
+                  href="/"
                   sx={{ color: "#0085EA", textDecoration: "none" }}
                 >
                   Faça login
