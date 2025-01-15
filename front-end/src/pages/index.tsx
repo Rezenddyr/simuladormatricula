@@ -49,7 +49,7 @@ export const Login: React.FC = () => {
 
     if (!emailError && !passwordError) {
       try {
-        const response = await fetch(API.URL + "src/Login.php", {
+        const response = await fetch(API.URL + "src/aluno/Login.php", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -66,13 +66,14 @@ export const Login: React.FC = () => {
         if (response.ok && !data.error) {
           alert(`Bem-vindo, ${data.user}!`);
           sessionStorage.setItem("token", data.token);
-          console.log(data.user);
           router.push({
             pathname: "/inicial",
             
-            query: { nome: data.user,
-                     email: data.email,
-                     matricula: data.matricula,
+            query: {
+              id: data.userId as string,
+              nome: data.user as string,
+              email: data.email as string,
+              matricula: data.matricula as string,
               
              },
           });

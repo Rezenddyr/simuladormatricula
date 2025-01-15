@@ -44,7 +44,7 @@ class ComposerStaticInit7340ac921438557e77ebd88ac1b163ca
     public static $prefixDirsPsr4 = array (
         'app\\' => 
         array (
-            0 => __DIR__ . '/../..' . '/app',
+            0 => __DIR__ . '/../..' . '/src',
         ),
         'Symfony\\Polyfill\\Php80\\' => 
         array (

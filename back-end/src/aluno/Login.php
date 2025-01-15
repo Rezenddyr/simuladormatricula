@@ -10,12 +10,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     exit;
 }
 
-require_once '../config/banco.php';
-require '../vendor/autoload.php';   
+require_once '../../config/banco.php';
+require_once '../../vendor/autoload.php';   
 
 use Firebase\JWT\JWT;
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/..');
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
 $dotenv->load();
 
 $banco = new DataBase();
@@ -54,7 +54,7 @@ if (isset($dados['email'], $dados['senha'])) {
 
             $encoded = JWT::encode($payload, $_ENV['KEY'], 'HS256');
 
-            echo json_encode(['message' => 'Login realizado com sucesso!', 'user' => $user['nome'], 'matricula' => $user['matricula'],  
+            echo json_encode(['message' => 'Login realizado com sucesso!', 'userId' => $user ['id_aluno'], 'user' => $user['nome'], 'matricula' => $user['matricula'],  
                 'email' => $user['email'], 'token' => $encoded]);
             
             

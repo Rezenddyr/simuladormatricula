@@ -2,8 +2,10 @@ import React, { useState } from 'react';
 import { Box, Avatar, Typography, Button, LinearProgress, Modal, TextField, IconButton, InputAdornment } from '@mui/material';
 import { Visibility, VisibilityOff, ExitToApp } from '@mui/icons-material'; // Importando o ícone ExitToApp
 import { useRouter } from "next/router";
+import * as API from '../utils/api';
 
 interface UserData {
+  id: string,
   nome: string,
   email: string,
   matricula: string;
@@ -24,6 +26,7 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
   const router = useRouter();
   const [openModal, setOpenModal] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [id, setId] = useState(userData.id);
   const [matricula, setMatricula] = useState(userData.matricula);
   const [senha, setSenha] = useState('');
   const [nome, setNome] = useState(userData.nome);
@@ -32,10 +35,29 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
 
-  const handleEditProfile = () => {
-    
-    alert('Perfil editado com sucesso!');
-    handleCloseModal();
+  const handleEditProfile = async () => {
+    try {
+      const response = await fetch(API.URL + 'src/aluno/editaPerfil.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          id,
+          email,
+          matricula,
+          nome,
+        }),
+      });
+      const data = await response.json();
+      console.log(data);
+      if(response.ok && !data.error) {
+        alert('Perfil editado com sucesso!');
+        handleCloseModal();
+      }
+    } catch (error) {
+      console.error('Erro ao editar perfil:', error);
+    }
   };
 
   const handleLogout = () => {
