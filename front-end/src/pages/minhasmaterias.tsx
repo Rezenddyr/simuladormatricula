@@ -12,6 +12,11 @@ import {
   ThemeProvider,
   createTheme,
   CssBaseline,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem as MuiMenuItem,
+  TextField,
   Accordion,
   AccordionSummary,
   AccordionDetails,
@@ -47,6 +52,8 @@ const MinhasMaterias: React.FC = () => {
   ]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
+  const [status, setStatus] = useState<{ [key: string]: string }>({});
+  const [year, setYear] = useState<{ [key: string]: string }>({});
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -65,9 +72,36 @@ const MinhasMaterias: React.FC = () => {
     setOpenModal(true);
   };
 
+  const generateYears = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+
+    for (let year = 2018; year <= currentYear; year++) {
+      years.push(`${year}.1`);
+      years.push(`${year}.2`);
+    }
+
+    return years;
+  };
+
+
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedSubject(null);
+  };
+
+  const handleStatusChange = (subject: string, newStatus: string) => {
+    setStatus((prevStatus) => ({
+      ...prevStatus,
+      [subject]: newStatus,
+    }));
+  };
+
+  const handleYearChange = (subject: string, newYear: string) => {
+    setYear((prevYear) => ({
+      ...prevYear,
+      [subject]: newYear,
+    }));
   };
 
   const handleDeleteSubject = (subject: string) => {
@@ -200,14 +234,63 @@ const MinhasMaterias: React.FC = () => {
                               display: 'flex',
                               justifyContent: 'space-between',
                               alignItems: 'center',
-                              padding: .5,
+                              padding: 1,
                               backgroundColor: '#00213A', // Fundo escuro
                               borderRadius: 1,
                             }}
                           >
                             <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <Checkbox sx={{ color: '#0085EA' }} />
+                              <FormControl variant="outlined" sx={{ minWidth: 160, height: 'auto' }}>
+                                <InputLabel id={`status-label-${subjectIndex}`} sx={{ height: 48 }}>Status</InputLabel>
+                                <Select
+                                  labelId={`status-label-${subjectIndex}`}
+                                  value={status[`Matéria ${subjectIndex + 1}`] || 'Não Feita'}
+                                  onChange={(e) => handleStatusChange(`Matéria ${subjectIndex + 1}`, e.target.value)}
+                                  label="Status"
+                                  sx={{
+                                    color: '#0085EA',
+                                    height: 48, // Definir a altura do Select
+                                    '.MuiOutlinedInput-notchedOutline': {
+                                      height: 48, // Ajuste para o contorno do Select
+                                    },
+                                  }}
+                                >
+                                  <MuiMenuItem value="Não Feita">Não Feita</MuiMenuItem>
+                                  <MuiMenuItem value="Em Andamento">Em Andamento</MuiMenuItem>
+                                  <MuiMenuItem value="Feita">Feita</MuiMenuItem>
+                                </Select>
+                              </FormControl>
+                              <FormControl variant="outlined" sx={{ marginLeft: 1,minWidth: 160, height: 'auto' }}>
+                                <InputLabel id={`year-label-${subjectIndex}`} sx={{ height: 48 }}>
+                                  Ano da Matéria
+                                </InputLabel>
+                                <Select
+                                  labelId={`year-label-${subjectIndex}`}
+                                  value={year[`Matéria ${subjectIndex + 1}`] || ''}
+                                  onChange={(e) => handleYearChange(`Matéria ${subjectIndex + 1}`, e.target.value)}
+                                  label="Ano da Matéria"
+                                  sx={{
+                                    color: '#0085EA',
+                                    height: 48, // Definir a altura do Select
+                                    '.MuiOutlinedInput-notchedOutline': {
+                                      height: 48, // Ajuste para o contorno do Select
+                                    },
+                                  }}
+                                >
+                                  {/* Opção "Selecione" como o valor inicial */}
+                                  <MuiMenuItem value="">
+                                    Selecione
+                                  </MuiMenuItem>
+
+                                  {/* Gerar os anos e semestres dinamicamente */}
+                                  {generateYears().map((year) => (
+                                    <MuiMenuItem key={year} value={year}>
+                                      {year}
+                                    </MuiMenuItem>
+                                  ))}
+                                </Select>
+                              </FormControl>
                               <Button
                                 variant="outlined"
                                 onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
@@ -233,7 +316,7 @@ const MinhasMaterias: React.FC = () => {
               </Box>
             )}
 
-{activeTab === 'feitas' && (
+            {activeTab === 'feitas' && (
               <Box sx={{ width: '100%' }}>
                 {[...Array(11).keys()].map((index) => (
                   <Accordion
