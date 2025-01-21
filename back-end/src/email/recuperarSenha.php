@@ -1,24 +1,26 @@
 <?php
-require 'vendor/autoload.php';
+require '../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
+$dotenv->load();
+
 function sendPasswordRecoveryEmail($userEmail, $recoveryLink) {
     $mail = new PHPMailer(true);
-
     try {
         // Configurações do servidor SMTP
         $mail->isSMTP();
         $mail->Host = 'smtp.gmail.com'; // Substitua pelo servidor SMTP que você está utilizando
         $mail->SMTPAuth = true;
-        $mail->Username = 'seuemail@gmail.com'; // Seu email
-        $mail->Password = 'suasenha';          // Sua senha ou App Password (para Gmail)
+        $mail->Username = $_ENV['MAIL'];
+        $mail->Password = $_ENV['PASS'];// Sua senha ou App Password (para Gmail)
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS; // TLS ou SMTPS
         $mail->Port = 465; // Porta do servidor (465 para SMTPS ou 587 para TLS)
 
         // Configurações do remetente e destinatário
-        $mail->setFrom('seuemail@gmail.com', 'Seu Nome ou Empresa');
+        $mail->setFrom('dweb2024.2@gmail.com', 'Simulador Matricula');
         $mail->addAddress($userEmail); // Email do usuário que vai receber o link
 
         // Conteúdo do email
@@ -42,9 +44,9 @@ function sendPasswordRecoveryEmail($userEmail, $recoveryLink) {
 }
 
 // Exemplo de uso:
-$userEmail = 'usuario@exemplo.com';
+$userEmail = 'dweb2024.2@gmail.com';
 $recoveryToken = bin2hex(random_bytes(16)); // Gera um token único para o link de recuperação
-$recoveryLink = "https://seusite.com/redefinir-senha?token={$recoveryToken}";
+$recoveryLink = "http://localhost:3000/esquecisenha={$recoveryToken}";
 
 sendPasswordRecoveryEmail($userEmail, $recoveryLink);
 ?>
