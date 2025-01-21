@@ -194,6 +194,19 @@ CREATE TABLE `professor` (
   `email` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+CREATE TABLE `notificacoes` (
+  `id_notificacao` INT(11) NOT NULL,
+  `mensagem` TEXT NOT NULL,
+  `criado_em` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+
+INSERT INTO `notificacoes` (`mensagem`) VALUES
+('Nova atualização disponível!'),
+('Seu pedido foi processado com sucesso!');
+
+
 --
 -- Despejando dados para a tabela `professor`
 --
