@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { CssBaseline } from "@mui/material";
+import * as API from "../utils/api";
 
 const theme = createTheme({
   palette: {
@@ -35,26 +36,25 @@ const EsqueciSenha: React.FC = () => {
   const handleVerifyCredentials = async () => {
     setMessage(null);
 
-    if (!email || !password) {
-      setMessage("Por favor, preencha o e-mail e a senha atual.");
+    if (!email) {
+      setMessage("Por favor, preencha o e-mail.");
       return;
     }
 
     try {
-      const response = await fetch(
-        "http://localhost:8000/src/aluno/alterar_senha.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ email, currentPassword: password }),
+      const response = await fetch(API.URL + 'src/email/recuperarSenha.php', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                email,
+              }),
         }
       );
 
       if (response.ok) {
-        setShowNewPasswordFields(true);
-        setMessage("Credenciais verificadas. Insira a nova senha.");
+        setMessage("O link de recuperação de senha foi enviado para o seu e-mail.");
       } else {
         const error = await response.json();
         setMessage(error.error || "E-mail ou senha incorretos.");
@@ -65,56 +65,6 @@ const EsqueciSenha: React.FC = () => {
     }
   };
 
-  const handleChangePassword = async () => {
-    setMessage(null);
-
-    if (!newPassword || !confirmPassword) {
-      setMessage("Por favor, preencha os campos de nova senha.");
-      return;
-    }
-
-    if (newPassword.length < 6) {
-      setMessage("A nova senha deve ter pelo menos 6 caracteres.");
-      return;
-    }
-
-    if (newPassword !== confirmPassword) {
-      setMessage("As senhas não coincidem.");
-      return;
-    }
-
-    try {
-      const response = await fetch(
-        "http://localhost:8000/src/aluno/alterar_senha.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            currentPassword: password,
-            newPassword,
-          }),
-        }
-      );
-
-      if (response.ok) {
-        setMessage("Senha alterada com sucesso!");
-        setShowNewPasswordFields(false);
-        setEmail("");
-        setPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
-      } else {
-        const error = await response.json();
-        setMessage(error.error || "Erro ao alterar a senha.");
-      }
-    } catch (error) {
-      setMessage("Erro ao conectar ao servidor. Tente novamente mais tarde.");
-      console.error("Erro:", error);
-    }
-  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -149,7 +99,7 @@ const EsqueciSenha: React.FC = () => {
               component="h1"
               sx={{ textAlign: "center", marginBottom: 2, color: "#FFFFFF" }}
             >
-              Alterar Senha
+              Recuperar Senha
             </Typography>
 
             <TextField
@@ -172,83 +122,6 @@ const EsqueciSenha: React.FC = () => {
                 },
               }}
             />
-            <TextField
-              label="Senha Atual"
-              type="password"
-              variant="outlined"
-              fullWidth
-              margin="normal"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              InputLabelProps={{ style: { color: "#94A3B8" } }}
-              sx={{
-                backgroundColor: "#00111F",
-                input: { color: "#FFFFFF" },
-                "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                  {
-                    borderColor: "#0085EA",
-                  },
-                "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                  borderColor: "#0085EA",
-                },
-              }}
-            />
-
-            {showNewPasswordFields && (
-              <>
-                <TextField
-                  label="Nova Senha"
-                  type="password"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  InputLabelProps={{ style: { color: "#94A3B8" } }}
-                  sx={{
-                    backgroundColor: "#00111F",
-                    input: { color: "#FFFFFF" },
-                    "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                      {
-                        borderColor: "#0085EA",
-                      },
-                    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#0085EA",
-                    },
-                  }}
-                />
-                <TextField
-                  label="Confirmar Nova Senha"
-                  type="password"
-                  variant="outlined"
-                  fullWidth
-                  margin="normal"
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                  InputLabelProps={{ style: { color: "#94A3B8" } }}
-                  sx={{
-                    backgroundColor: "#00111F",
-                    input: { color: "#FFFFFF" },
-                    "& .MuiOutlinedInput-root:hover .MuiOutlinedInput-notchedOutline":
-                      {
-                        borderColor: "#0085EA",
-                      },
-                    "& .Mui-focused .MuiOutlinedInput-notchedOutline": {
-                      borderColor: "#0085EA",
-                    },
-                  }}
-                />
-                <Button
-                  variant="contained"
-                  color="primary"
-                  fullWidth
-                  sx={{ marginTop: 2 }}
-                  onClick={handleChangePassword}
-                >
-                  Alterar Senha
-                </Button>
-              </>
-            )}
 
             {!showNewPasswordFields && (
               <Button
@@ -258,7 +131,7 @@ const EsqueciSenha: React.FC = () => {
                 sx={{ marginTop: 2 }}
                 onClick={handleVerifyCredentials}
               >
-                Verificar Credenciais
+                Enviar Email
               </Button>
             )}
 

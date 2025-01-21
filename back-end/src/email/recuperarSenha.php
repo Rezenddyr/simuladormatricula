@@ -1,4 +1,13 @@
 <?php
+
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Methods: POST, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit;
+}
+
 require '../../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -30,10 +39,10 @@ function sendPasswordRecoveryEmail($userEmail, $recoveryLink) {
             <h1>Recuperação de Senha</h1>
             <p>Olá,</p>
             <p>Recebemos uma solicitação para redefinir sua senha. Clique no link abaixo para continuar:</p>
-            <a href='{$recoveryLink}'>Redefinir Senha</a>
+            <a href='http://localhost:3000/esquecisenha={$recoveryToken}'>Redefinir Senha</a>
             <p>Se você não solicitou isso, ignore este e-mail.</p>
         ";
-        $mail->AltBody = "Olá,\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo para continuar:\n\n{$recoveryLink}\n\nSe você não solicitou isso, ignore este e-mail.";
+        $mail->AltBody = "Olá,\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo para continuar:\n\nhttp://localhost:3000/esquecisenha={$recoveryToken}\n\nSe você não solicitou isso, ignore este e-mail.";
 
         // Envia o email
         $mail->send();
@@ -43,10 +52,14 @@ function sendPasswordRecoveryEmail($userEmail, $recoveryLink) {
     }
 }
 
-// Exemplo de uso:
-$userEmail = 'dweb2024.2@gmail.com';
-$recoveryToken = bin2hex(random_bytes(16)); // Gera um token único para o link de recuperação
-$recoveryLink = "http://localhost:3000/esquecisenha={$recoveryToken}";
+$dados = json_decode(file_get_contents('php://input'), true);
+if (isset($dados['email'])) {
+    $userEmail = $dados['email'];
+    $recoveryToken = bin2hex(random_bytes(16)); // Gera um token único para o link de recuperação
+    sendPasswordRecoveryEmail($userEmail, $recoveryToken);
+} else {
+    echo json_encode(['error' => 'Dados incompletos enviados.']);
+}
 
-sendPasswordRecoveryEmail($userEmail, $recoveryLink);
+
 ?>

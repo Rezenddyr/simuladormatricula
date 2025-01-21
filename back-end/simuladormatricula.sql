@@ -23,6 +23,21 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+-- -----------------------------------------------------
+-- Table `reset_token`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `reset_token`;
+
+CREATE TABLE IF NOT EXISTS `reset_token` (
+  `token` VARCHAR(255) NOT NULL,
+  `id_aluno` INT NOT NULL,
+  `expira_em` VARCHAR(45) NOT NULL,
+  INDEX `fk_id_aluno_idx` (`id_aluno` ASC),
+  CONSTRAINT `fk_id_aluno_token`
+    FOREIGN KEY (`id_aluno`)
+    REFERENCES `aluno` (`id_aluno`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 --
 -- Estrutura para tabela `aluno`
 --
