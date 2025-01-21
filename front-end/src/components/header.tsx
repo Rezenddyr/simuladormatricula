@@ -9,6 +9,8 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import NotificationsIcon from "@mui/icons-material/Notifications";
+import * as API from "../utils/api";
+
 
 interface HeaderProps {
   notifications: string[];
