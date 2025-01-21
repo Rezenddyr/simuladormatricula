@@ -2,7 +2,7 @@ import React from 'react';
 import { Card, CardContent, Button, Box, Typography } from '@mui/material';
 import { Link as MuiLink } from '@mui/material';
 
-const Funcionalidades: React.FC = () => {
+const Dashboard: React.FC = () => {
     return (
         <Card
             sx={{
@@ -20,67 +20,9 @@ const Funcionalidades: React.FC = () => {
                 alignItems: 'stretch',
             }}
         >
-            <CardContent>
-                <Typography
-                    variant="h5"
-                    component="h1"
-                    sx={{ textAlign: 'center', marginBottom: 4, color: '#FFFFFF' }}
-                >
-                    Funcionalidades
-                </Typography>
-                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                    <MuiLink component="a" href="/minhasmaterias" style={{ textDecoration: 'none' }}>
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                backgroundColor: '#0085EA',
-                                color: '#FFFFFF',
-                                '&:hover': {
-                                    backgroundColor: '#006BB3',
-                                },
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            Matérias Feitas
-                        </Button>
-                    </MuiLink>
-                    <MuiLink component="a" href="/simular" style={{ textDecoration: 'none' }}>
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                backgroundColor: '#0085EA',
-                                color: '#FFFFFF',
-                                '&:hover': {
-                                    backgroundColor: '#006BB3',
-                                },
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            Simular Matrícula
-                        </Button>
-                    </MuiLink>
-                    <MuiLink component="a" href="/horario" style={{ textDecoration: 'none' }}>
-                        <Button
-                            variant="contained"
-                            fullWidth
-                            sx={{
-                                backgroundColor: '#0085EA',
-                                color: '#FFFFFF',
-                                '&:hover': {
-                                    backgroundColor: '#006BB3',
-                                },
-                                fontWeight: 'bold',
-                            }}
-                        >
-                            Meu Horário
-                        </Button>
-                    </MuiLink>
-                </Box>
-            </CardContent>
+            
         </Card>
     );
 };
 
-export default Funcionalidades;
+export default Dashboard;

@@ -5,7 +5,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Button,
   Box,
   Link as MuiLink,
 } from "@mui/material";
@@ -30,7 +29,7 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
     <AppBar position="sticky" sx={{ backgroundColor: "#00213A" }}>
       <Toolbar>
         {/* Logo à esquerda */}
-        <MuiLink href="/" sx={{ flexGrow: 1 }}>
+        <MuiLink href="/" sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
           <img
             src="/images/logo.svg" // Caminho da imagem
             alt="Logo"
@@ -38,48 +37,34 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
           />
         </MuiLink>
 
-        {/* Botões de Login e Cadastro
-        <Box sx={{ display: "flex", gap: 2 }}>
+        {/* Textos ao lado da logo */}
+        <Box sx={{ display: "flex", alignItems: "center", gap: 3, marginLeft: 3 }}>
           <MuiLink
-            component="a"
-            href="/login"
-            style={{ textDecoration: "none" }}
+            href="/minhasmaterias"
+            sx={{
+              color: "#FFFFFF",
+              textDecoration: "none",
+              "&:hover": { color: "#0085EA" },
+              fontWeight: "bold",
+            }}
           >
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#0085EA",
-                color: "#FFFFFF",
-                "&:hover": {
-                  backgroundColor: "#006BB3",
-                },
-                fontWeight: "bold",
-              }}
-            >
-              Login
-            </Button>
+            Inserir Matérias
           </MuiLink>
+          <MuiLink
+            href="/horario"
+            sx={{
+              color: "#FFFFFF",
+              textDecoration: "none",
+              "&:hover": { color: "#0085EA" },
+              fontWeight: "bold",
+            }}
+          >
+            Horário
+          </MuiLink>
+        </Box>
 
-          <MuiLink
-            component="a"
-            href="/cadastro"
-            style={{ textDecoration: "none" }}
-          >
-            <Button
-              variant="contained"
-              sx={{
-                backgroundColor: "#0085EA",
-                color: "#FFFFFF",
-                "&:hover": {
-                  backgroundColor: "#006BB3",
-                },
-                fontWeight: "bold",
-              }}
-            >
-              Cadastro
-            </Button>
-          </MuiLink>
-        </Box> */}
+        {/* Espaço para empurrar os elementos à direita */}
+        <Box sx={{ flexGrow: 1 }} />
 
         {/* Botão de Notificação */}
         <IconButton edge="end" color="inherit" onClick={handleClick}>
