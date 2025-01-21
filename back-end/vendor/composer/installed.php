@@ -3,7 +3,7 @@
         'name' => 'arthur/back-end',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '18e29a1811171e966a40f9e286466094245a062b',
+        'reference' => 'a1078d6ecffdeb08d790f0edc7b7972e38b83e99',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'arthur/back-end' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '18e29a1811171e966a40f9e286466094245a062b',
+            'reference' => 'a1078d6ecffdeb08d790f0edc7b7972e38b83e99',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
