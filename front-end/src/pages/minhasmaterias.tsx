@@ -234,15 +234,30 @@ const MinhasMaterias: React.FC = () => {
                               display: 'flex',
                               justifyContent: 'space-between',
                               alignItems: 'center',
-                              padding: 1,
-                              backgroundColor: '#00213A', // Fundo escuro
+                              padding: 1.7,
+                              backgroundColor: '#00111F', // Fundo escuro
                               borderRadius: 1,
                             }}
                           >
                             <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <FormControl variant="outlined" sx={{ minWidth: 160, height: 'auto' }}>
-                                <InputLabel id={`status-label-${subjectIndex}`} sx={{ height: 48 }}>Status</InputLabel>
+                              <FormControl
+                                variant="outlined"
+                                sx={{
+                                  minWidth: 160,
+                                  height: 'auto',
+                                }}
+                              >
+                                <InputLabel
+                                  id={`status-label-${subjectIndex}`}
+                                  sx={{
+                                    height: 48,
+                                    color: '#0085EA',
+                                  }}
+                                >
+                                  Status
+                                </InputLabel>
+
                                 <Select
                                   labelId={`status-label-${subjectIndex}`}
                                   value={status[`Matéria ${subjectIndex + 1}`] || 'Não Feita'}
@@ -252,7 +267,24 @@ const MinhasMaterias: React.FC = () => {
                                     color: '#0085EA',
                                     height: 48, // Definir a altura do Select
                                     '.MuiOutlinedInput-notchedOutline': {
-                                      height: 48, // Ajuste para o contorno do Select
+                                      borderColor: '#0085EA', // Cor padrão da borda
+                                    },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                                      borderColor: '#0056B3', // Cor da borda no hover
+                                    },
+                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                      borderColor: '#003F7D', // Cor da borda ao focar
+                                    },
+                                    '.MuiSelect-icon': {
+                                      color: '#0085EA', // Cor da setinha do dropdown
+                                    },
+                                  }}
+                                  MenuProps={{
+                                    PaperProps: {
+                                      sx: {
+                                        backgroundColor: '#00111F', // Cor de fundo do dropdown
+                                        color: '#FFFFFF', // Cor do texto das opções
+                                      },
                                     },
                                   }}
                                 >
@@ -261,10 +293,25 @@ const MinhasMaterias: React.FC = () => {
                                   <MuiMenuItem value="Feita">Feita</MuiMenuItem>
                                 </Select>
                               </FormControl>
-                              <FormControl variant="outlined" sx={{ marginLeft: 1,minWidth: 160, height: 'auto' }}>
-                                <InputLabel id={`year-label-${subjectIndex}`} sx={{ height: 48 }}>
+
+                              <FormControl
+                                variant="outlined"
+                                sx={{
+                                  marginLeft: 1,
+                                  minWidth: 160,
+                                  height: 'auto',
+                                }}
+                              >
+                                <InputLabel
+                                  id={`year-label-${subjectIndex}`}
+                                  sx={{
+                                    height: 48,
+                                    color: '#0085EA',
+                                  }}
+                                >
                                   Ano da Matéria
                                 </InputLabel>
+
                                 <Select
                                   labelId={`year-label-${subjectIndex}`}
                                   value={year[`Matéria ${subjectIndex + 1}`] || ''}
@@ -274,7 +321,24 @@ const MinhasMaterias: React.FC = () => {
                                     color: '#0085EA',
                                     height: 48, // Definir a altura do Select
                                     '.MuiOutlinedInput-notchedOutline': {
-                                      height: 48, // Ajuste para o contorno do Select
+                                      borderColor: '#0085EA', // Definir a cor da borda
+                                    },
+                                    '&:hover .MuiOutlinedInput-notchedOutline': {
+                                      borderColor: '#0056B3', // Cor da borda no hover
+                                    },
+                                    '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+                                      borderColor: '#003F7D', // Cor da borda ao focar
+                                    },
+                                    '.MuiSelect-icon': {
+                                      color: '#0085EA', // Cor da setinha do dropdown
+                                    },
+                                  }}
+                                  MenuProps={{
+                                    PaperProps: {
+                                      sx: {
+                                        backgroundColor: '#00111F', // Cor de fundo do dropdown
+                                        color: '#FFFFFF', // Cor do texto das opções
+                                      },
                                     },
                                   }}
                                 >
@@ -290,6 +354,8 @@ const MinhasMaterias: React.FC = () => {
                                   ))}
                                 </Select>
                               </FormControl>
+
+
                               <Button
                                 variant="outlined"
                                 onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
@@ -354,34 +420,20 @@ const MinhasMaterias: React.FC = () => {
                               display: 'flex',
                               justifyContent: 'space-between',
                               alignItems: 'center',
-                              padding: .5,
-                              backgroundColor: '#00213A', // Fundo escuro
+                              padding: 1.5,
+                              backgroundColor: '#00111F', // Fundo escuro
                               borderRadius: 1,
                             }}
                           >
                             <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <Button
-                                onClick={() => handleDeleteSubject(`Matéria ${subjectIndex + 1}`)}
-                                sx={{
-                                  marginLeft: 2,
-                                  borderColor: '#FF0000',
-                                  color: '#FF0000',
-                                  '&:hover': {
-                                    borderColor: '#FF5733',
-                                    color: '#FF5733',
-                                  },
-                                }}
-                              >
-                                X
-                              </Button>
-                              <Button
                                 variant="outlined"
                                 onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
                                 sx={{
                                   marginLeft: 2,
-                                  borderColor: '#006BB3',
-                                  color: '#006BB3',
+                                  borderColor: '#0085EA',
+                                  color: '#0085EA',
                                   '&:hover': {
                                     borderColor: '#0085EA',
                                     color: '#0085EA',
