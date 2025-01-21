@@ -283,7 +283,6 @@ const MinhasMaterias: React.FC = () => {
                                     Selecione
                                   </MuiMenuItem>
 
-                                  {/* Gerar os anos e semestres dinamicamente */}
                                   {generateYears().map((year) => (
                                     <MuiMenuItem key={year} value={year}>
                                       {year}
