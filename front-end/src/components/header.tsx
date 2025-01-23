@@ -11,7 +11,6 @@ import {
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import * as API from "../utils/api";
 
-
 interface HeaderProps {
   notifications: string[];
 }
@@ -31,7 +30,10 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
     <AppBar position="sticky" sx={{ backgroundColor: "#00213A" }}>
       <Toolbar>
         {/* Logo à esquerda */}
-        <MuiLink href="/" sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+        <MuiLink
+          href="/"
+          sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}
+        >
           <img
             src="/images/logo.svg" // Caminho da imagem
             alt="Logo"
@@ -40,7 +42,15 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
         </MuiLink>
 
         {/* Textos ao lado da logo */}
-        <Box sx={{ display: "flex", alignItems: "center", gap: 3, marginLeft: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            fontSize: 20,
+            gap: 15,
+            marginLeft: 10,
+          }}
+        >
           <MuiLink
             href="/minhasmaterias"
             sx={{
@@ -62,6 +72,17 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
             }}
           >
             Horário
+          </MuiLink>
+          <MuiLink
+            href="/notas"
+            sx={{
+              color: "#FFFFFF",
+              textDecoration: "none",
+              "&:hover": { color: "#0085EA" },
+              fontWeight: "bold",
+            }}
+          >
+            Notas
           </MuiLink>
         </Box>
 
