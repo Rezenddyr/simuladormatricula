@@ -361,8 +361,8 @@ const MinhasMaterias: React.FC = () => {
                                 onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
                                 sx={{
                                   marginLeft: 2,
-                                  borderColor: '#006BB3',
-                                  color: '#006BB3',
+                                  borderColor: '#0085EA',
+                                  color: '#0085EA',
                                   '&:hover': {
                                     borderColor: '#0085EA',
                                     color: '#0085EA',

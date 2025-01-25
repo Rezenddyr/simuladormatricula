@@ -8,6 +8,7 @@ import Funcionalidades from "@/components/funcionalidades";
 import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 import { isAuthorized } from "../utils/auth";
+import Notificacoes from "@/components/notificacoes";
 
 const theme = createTheme({
   palette: {
@@ -76,6 +77,8 @@ const IndexPage: React.FC = () => {
 
         {/* Mini Perfil */}
         <MiniPerfil userData={userData} />
+
+        {/* <Notificacoes/> */}
 
         {/* Funcionalidades */}
         <Funcionalidades />
