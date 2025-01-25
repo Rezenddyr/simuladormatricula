@@ -31,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
       <Toolbar>
         {/* Logo à esquerda */}
         <MuiLink
-          href="/"
+          href="/inicial"
           sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}
         >
           <img

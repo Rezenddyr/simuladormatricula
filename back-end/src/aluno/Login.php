@@ -48,6 +48,7 @@ if (isset($dados['email'], $dados['senha'])) {
                 "exp" => time() + 1800,
                 "iat" => time(),
                 "email" => $email,
+                "id" => $user['id_aluno'],
             ];
 
             $encoded = JWT::encode($payload, $_ENV['KEY'], 'HS256');

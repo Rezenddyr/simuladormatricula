@@ -16,7 +16,7 @@ class Aluno
     public function modificaNomeAluno()
     {
         try {
-            $query = "UPDATE " . $this->tabela . " SET nome = '" . $this->nome. "' WHERE id_aluno = " . $this->idCliente . "";
+            $query = "UPDATE " . $this->tabela . " SET nome = '" . $this->nome. "' WHERE id_aluno = " . $this->idAluno . "";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':nome', $this->nome);
             $stmt->bindParam(':id_aluno', $this->id_aluno);
@@ -30,7 +30,7 @@ class Aluno
     public function modificaEmailAluno()
     {
         try {
-            $query = "UPDATE " . $this->tabela . " SET email = '" . $this->email. "' WHERE id_aluno = " . $this->idCliente . "";
+            $query = "UPDATE " . $this->tabela . " SET email = '" . $this->email. "' WHERE id_aluno = " . $this->idAluno . "";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':email', $this->email);
             $stmt->bindParam(':id_aluno', $this->id_aluno);
@@ -44,7 +44,7 @@ class Aluno
     public function modificaMatriculaAluno()
     {
         try {
-            $query = "UPDATE " . $this->tabela . " SET matricula = '" . $this->matricula. "' WHERE id_aluno = " . $this->idCliente . "";
+            $query = "UPDATE " . $this->tabela . " SET matricula = '" . $this->matricula. "' WHERE id_aluno = " . $this->idAluno . "";
             $stmt = $this->conn->prepare($query);
             $stmt->bindParam(':matricula', $this->matricula);
             $stmt->bindParam(':id_aluno', $this->id_aluno);
@@ -54,5 +54,18 @@ class Aluno
             echo json_encode(['error' => 'Erro ao atualizar matricula: ' . $e->getMessage()]);
         }
     }
+    public function getMatricula()
+    {
+        $query = "SELECT matricula FROM " . $this->tabela . " WHERE id_aluno = " . $this->idAluno . "";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id_aluno', $this->id_aluno);
+        try{
+            $stmt->execute();
+            echo json_encode(['message' => 'Matricula obtida com sucesso!']);
+        } catch (PDOException $e) {
+            echo json_encode(['error' => 'Erro ao obter matricula: ' . $e->getMessage()]);
+        }
+    }
 }
+    
 ?>

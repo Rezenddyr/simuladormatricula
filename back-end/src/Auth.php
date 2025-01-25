@@ -20,7 +20,7 @@
     if ($dados && isset($dados['jwt']) && !empty($dados['jwt'])){
         $token = $dados['jwt'];
         try{
-            $decoded = JWT::decode($token, new Key($_SERVER['KEY'], 'HS256'));
+            $decoded = JWT::decode($token, new Key($_ENV['KEY'], 'HS256'));
             if($decoded->exp < time()){
                 throw new Exception('Expired token');
             }

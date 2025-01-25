@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -23,9 +23,11 @@ import {
   Checkbox,
   Modal,
   FormControlLabel,
+  CircularProgress,
 } from '@mui/material';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Header from '@/components/header';
+import * as API from '@/utils/api';
 
 const theme = createTheme({
   palette: {
@@ -54,6 +56,33 @@ const MinhasMaterias: React.FC = () => {
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [status, setStatus] = useState<{ [key: string]: string }>({});
   const [year, setYear] = useState<{ [key: string]: string }>({});
+  const token = typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
+  const currentDate = new Date();
+  const [matricula, setMatricula] = useState<string | null>(null);
+  const [anoIngresso, setAnoIngresso] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  
+
+  const fetchMatricula = async () => {
+    try {
+      const response = await fetch(API.URL + 'src/aluno/getMatricula.php' , {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({})
+      });
+      const data = await response.json();
+      if(response.ok && !data.error){
+        setMatricula(data.matricula);
+      }
+          
+      }catch (error) {
+        alert('Erro ao buscar matricula: ' + error);
+      }
+    }
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -70,6 +99,7 @@ const MinhasMaterias: React.FC = () => {
   const handleOpenModal = (subject: string) => {
     setSelectedSubject(subject);
     setOpenModal(true);
+    
   };
 
   const generateYears = () => {
@@ -95,6 +125,7 @@ const MinhasMaterias: React.FC = () => {
       ...prevStatus,
       [subject]: newStatus,
     }));
+    
   };
 
   const handleYearChange = (subject: string, newYear: string) => {
@@ -108,6 +139,20 @@ const MinhasMaterias: React.FC = () => {
     console.log(`Matéria ${subject} excluída.`);
     // Aqui você pode adicionar a lógica para excluir a matéria da lista
   };
+
+  useEffect(() => {
+    fetchMatricula();
+  }
+  , []);
+
+  useEffect(() => {
+    if(matricula !== null){
+      setAnoIngresso(matricula ? matricula.substring(0, 4) : null);
+      setLoading(false);
+    } else {
+      setAnoIngresso(null);
+    }
+  }, [matricula]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -381,9 +426,14 @@ const MinhasMaterias: React.FC = () => {
               </Box>
             )}
 
+           
+
             {activeTab === 'feitas' && (
               <Box sx={{ width: '100%' }}>
-                {[...Array(11).keys()].map((index) => (
+              {loading === true ? (
+                <CircularProgress color="primary" />
+              ) : (
+                [...Array( 2 * (Number(currentDate.getFullYear()) - Number(anoIngresso)) + 1).keys()].map((index) => (
                   <Accordion
                     key={index}
                     sx={{
@@ -407,9 +457,11 @@ const MinhasMaterias: React.FC = () => {
                         },
                       }}
                     >
+                      
                       <Typography sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                        {index + 1 === 11 ? 'Optativas' : `Período ${index + 1}`}
+                        {`${Number(anoIngresso) + Math.floor(index / 2)}.${(index % 2) + 1}`}
                       </Typography>
+
                     </AccordionSummary>
                     <AccordionDetails sx={{ backgroundColor: '#00213A', color: '#FFFFFF' }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
@@ -448,8 +500,10 @@ const MinhasMaterias: React.FC = () => {
                       </Box>
                     </AccordionDetails>
                   </Accordion>
-                ))}
-              </Box>
+                ))
+              )}
+            </Box>
+            
             )}
 
             {/* Modal de informações da matéria */}
