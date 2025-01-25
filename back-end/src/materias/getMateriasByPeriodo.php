@@ -19,7 +19,7 @@ $dados = json_decode(file_get_contents('php://input'), true);
 if(isset($dados['periodo'])){
     $periodo = $dados['periodo'];
     try{
-        $query = "SELECT * FROM materias WHERE periodo = :periodo;";
+        $query = "SELECT * FROM materia WHERE periodo = :periodo;";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':periodo', $periodo);
         $stmt->execute();

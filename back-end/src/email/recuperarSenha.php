@@ -16,7 +16,7 @@ use PHPMailer\PHPMailer\Exception;
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
 $dotenv->load();
 
-function sendPasswordRecoveryEmail($userEmail, $recoveryLink) {
+function sendPasswordRecoveryEmail($userEmail, $recoveryToken) {
     $mail = new PHPMailer(true);
     try {
         // Configurações do servidor SMTP
@@ -39,7 +39,7 @@ function sendPasswordRecoveryEmail($userEmail, $recoveryLink) {
             <h1>Recuperação de Senha</h1>
             <p>Olá,</p>
             <p>Recebemos uma solicitação para redefinir sua senha. Clique no link abaixo para continuar:</p>
-            <a href='http://localhost:3000/esquecisenha={$recoveryToken}'>Redefinir Senha</a>
+            <a href='http://localhost:3000/esquecisenha?={$recoveryToken}'>Redefinir Senha</a>
             <p>Se você não solicitou isso, ignore este e-mail.</p>
         ";
         $mail->AltBody = "Olá,\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo para continuar:\n\nhttp://localhost:3000/esquecisenha={$recoveryToken}\n\nSe você não solicitou isso, ignore este e-mail.";
