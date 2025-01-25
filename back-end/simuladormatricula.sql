@@ -186,13 +186,16 @@ INSERT INTO `materia` (`codigo`, `nome`, `carga_horaria`, `pre_requisitos`, `co_
 
 --
 -- Estrutura para tabela `matriculas`
---
+-- 
 
 CREATE TABLE `matriculas` (
   `id_matricula` int(11) NOT NULL,
   `id_aluno` int(11) NOT NULL,
   `codigo_materia` varchar(255) NOT NULL,
-  `data_cadastro` varchar(45) NOT NULL
+  `data_cadastro` varchar(45) NOT NULL,
+  `periodo_letivo` varchar(45) NOT NULL,
+  `situacao` INT NOT NULL, -- 0 = Reprovado 1 = Aprovado 2 = Cursando
+  `nota` varchar(45) NOT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
