@@ -10,13 +10,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 
 require '../../vendor/autoload.php';
 
+
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
 
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../..');
 $dotenv->load();
 
-function sendPasswordRecoveryEmail($userEmail, $recoveryToken) {
+
+
+
+function sendPasswordRecoveryEmail($userEmail) {
     $mail = new PHPMailer(true);
     try {
         // Configurações do servidor SMTP
@@ -38,11 +42,12 @@ function sendPasswordRecoveryEmail($userEmail, $recoveryToken) {
         $mail->Body = "
             <h1>Recuperação de Senha</h1>
             <p>Olá,</p>
-            <p>Recebemos uma solicitação para redefinir sua senha. Clique no link abaixo para continuar:</p>
-            <a href='http://localhost:3000/esquecisenha?={$recoveryToken}'>Redefinir Senha</a>
+            <p>Recebemos uma solicitação para redefinir sua senha. Clique no link abaixo para confirmar:</p>
+            <a href = 'http://localhost:8000/src/email/confirmarRecuperacao.php?email={$userEmail}'> Recuperar Senha </a>
+            <p>A senha pode ser alterada posteriormente ao fazer o login.</p>
             <p>Se você não solicitou isso, ignore este e-mail.</p>
-        ";
-        $mail->AltBody = "Olá,\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo para continuar:\n\nhttp://localhost:3000/esquecisenha={$recoveryToken}\n\nSe você não solicitou isso, ignore este e-mail.";
+";
+        $mail->AltBody = "Olá,\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo para continuar:\n\nhttp://localhost:3000/esquecisenha={$randomPassword}\n\nSe você não solicitou isso, ignore este e-mail.";
 
         // Envia o email
         $mail->send();
@@ -55,11 +60,8 @@ function sendPasswordRecoveryEmail($userEmail, $recoveryToken) {
 $dados = json_decode(file_get_contents('php://input'), true);
 if (isset($dados['email'])) {
     $userEmail = $dados['email'];
-    $recoveryToken = bin2hex(random_bytes(16)); // Gera um token único para o link de recuperação
-    sendPasswordRecoveryEmail($userEmail, $recoveryToken);
+    sendPasswordRecoveryEmail($userEmail);
 } else {
     echo json_encode(['error' => 'Dados incompletos enviados.']);
 }
-
-
 ?>
