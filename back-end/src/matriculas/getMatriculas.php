@@ -23,7 +23,6 @@ $conn = $banco->getConn();
 
 $headers = getallheaders();
 
-
 if (isset($headers['Authorization'])){
     $authHeader = $headers['Authorization'];
     $token = str_replace('Bearer ', '', $authHeader);
@@ -36,19 +35,17 @@ if (isset($headers['Authorization'])){
         exit;
     }
     try{
-        // Aqui o código de autenticação deu certo, então você pode executar a consulta.
-        $query = "SELECT matricula FROM aluno WHERE id_aluno = :id_aluno";
+        $query = "SELECT * FROM matriculas WHERE id_aluno = :id_aluno;";
         $stmt = $conn->prepare($query);
         $stmt->bindParam(':id_aluno', $idAluno);
         $stmt->execute();
-        $matricula = $stmt->fetch(PDO::FETCH_ASSOC);
-        echo json_encode(['message' => 'Matricula encontrada com sucesso!', 'matricula' => $matricula['matricula']]);
+        $matriculas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        echo json_encode(['message' => 'Matriculas encontradas com sucesso!', 'matriculas' => $matriculas]);
     }catch(Exception $e){
         http_response_code(500);
         echo json_encode(['error' => 'Erro no servidor: ' . $e->getMessage()]);
         exit;
     }
-   
 } else {
     http_response_code(400);
     echo json_encode(['error' => 'Token de autenticação não encontrado']);
