@@ -2,13 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
-  AppBar,
-  Toolbar,
   Button,
-  IconButton,
   Menu,
   MenuItem,
-  Link as MuiLink,
   ThemeProvider,
   createTheme,
   CssBaseline,
@@ -16,16 +12,12 @@ import {
   InputLabel,
   Select,
   MenuItem as MuiMenuItem,
-  TextField,
   Accordion,
   AccordionSummary,
   AccordionDetails,
-  Checkbox,
   Modal,
-  FormControlLabel,
   CircularProgress,
 } from '@mui/material';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import Header from '@/components/header';
 import * as API from '@/utils/api';
 
@@ -61,12 +53,11 @@ const MinhasMaterias: React.FC = () => {
   const [matricula, setMatricula] = useState<string | null>(null);
   const [anoIngresso, setAnoIngresso] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-
-  
+  const [materiasPorPeriodo, setMateriasPorPeriodo] = useState<{ [key: number]: any[] }>({});
 
   const fetchMatricula = async () => {
     try {
-      const response = await fetch(API.URL + 'src/aluno/getMatricula.php' , {
+      const response = await fetch(API.URL + 'src/aluno/getMatricula.php', {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -75,14 +66,35 @@ const MinhasMaterias: React.FC = () => {
         body: JSON.stringify({})
       });
       const data = await response.json();
-      if(response.ok && !data.error){
+      if (response.ok && !data.error) {
         setMatricula(data.matricula);
       }
-          
-      }catch (error) {
-        alert('Erro ao buscar matricula: ' + error);
-      }
+    } catch (error) {
+      alert('Erro ao buscar matricula: ' + error);
     }
+  };
+
+  const fetchMateriasByPeriodo = async (periodo: number) => {
+    try {
+      const response = await fetch(API.URL + 'src/materias/getMateriasByPeriodo.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ periodo }),
+      });
+      const data = await response.json();
+      if (response.ok && !data.error) {
+        return data.materias;
+      } else {
+        console.error('Erro ao buscar matérias:', data.error);
+        return [];
+      }
+    } catch (error) {
+      console.error('Erro ao buscar matérias:', error);
+      return [];
+    }
+  };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -99,7 +111,6 @@ const MinhasMaterias: React.FC = () => {
   const handleOpenModal = (subject: string) => {
     setSelectedSubject(subject);
     setOpenModal(true);
-    
   };
 
   const generateYears = () => {
@@ -114,7 +125,6 @@ const MinhasMaterias: React.FC = () => {
     return years;
   };
 
-
   const handleCloseModal = () => {
     setOpenModal(false);
     setSelectedSubject(null);
@@ -125,7 +135,6 @@ const MinhasMaterias: React.FC = () => {
       ...prevStatus,
       [subject]: newStatus,
     }));
-    
   };
 
   const handleYearChange = (subject: string, newYear: string) => {
@@ -135,24 +144,30 @@ const MinhasMaterias: React.FC = () => {
     }));
   };
 
-  const handleDeleteSubject = (subject: string) => {
-    console.log(`Matéria ${subject} excluída.`);
-    // Aqui você pode adicionar a lógica para excluir a matéria da lista
-  };
-
   useEffect(() => {
     fetchMatricula();
-  }
-  , []);
+  }, []);
 
   useEffect(() => {
-    if(matricula !== null){
+    if (matricula !== null) {
       setAnoIngresso(matricula ? matricula.substring(0, 4) : null);
       setLoading(false);
     } else {
       setAnoIngresso(null);
     }
   }, [matricula]);
+
+  useEffect(() => {
+    const fetchAllMaterias = async () => {
+      const materias: { [key: number]: any[] } = {};
+      for (let periodo = 0; periodo <= 10; periodo++) {
+        materias[periodo] = await fetchMateriasByPeriodo(periodo);
+      }
+      setMateriasPorPeriodo(materias);
+    };
+
+    fetchAllMaterias();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
@@ -170,7 +185,6 @@ const MinhasMaterias: React.FC = () => {
       >
         {/* Navbar */}
         <Header notifications={notifications} />
-
 
         <Menu
           anchorEl={anchorEl}
@@ -229,7 +243,7 @@ const MinhasMaterias: React.FC = () => {
               alignItems: 'center',
               flexDirection: 'column',
               minHeight: '300px',
-              width: '60%',
+              width: '90%', // Aumente a largura para 90%
               margin: '0 auto',
               backgroundColor: '#00213A',
               color: '#FFFFFF',
@@ -267,12 +281,12 @@ const MinhasMaterias: React.FC = () => {
                       }}
                     >
                       <Typography sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                        {index + 1 === 11 ? 'Optativas' : `Período ${index + 1}`}
+                        {index === 0 ? 'Optativas' : `Período ${index}`}
                       </Typography>
                     </AccordionSummary>
                     <AccordionDetails sx={{ backgroundColor: '#00213A', color: '#FFFFFF' }}>
                       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {[...Array(5).keys()].map((subjectIndex) => (
+                        {materiasPorPeriodo[index]?.map((materia, subjectIndex) => (
                           <Box
                             key={subjectIndex}
                             sx={{
@@ -284,7 +298,7 @@ const MinhasMaterias: React.FC = () => {
                               borderRadius: 1,
                             }}
                           >
-                            <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
+                            <Typography sx={{ color: '#FFFFFF' }}>{materia.nome}</Typography>
                             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                               <FormControl
                                 variant="outlined"
@@ -305,8 +319,8 @@ const MinhasMaterias: React.FC = () => {
 
                                 <Select
                                   labelId={`status-label-${subjectIndex}`}
-                                  value={status[`Matéria ${subjectIndex + 1}`] || 'Não Feita'}
-                                  onChange={(e) => handleStatusChange(`Matéria ${subjectIndex + 1}`, e.target.value)}
+                                  value={status[materia.nome] || 'Não Feita'}
+                                  onChange={(e) => handleStatusChange(materia.nome, e.target.value)}
                                   label="Status"
                                   sx={{
                                     color: '#0085EA',
@@ -359,8 +373,8 @@ const MinhasMaterias: React.FC = () => {
 
                                 <Select
                                   labelId={`year-label-${subjectIndex}`}
-                                  value={year[`Matéria ${subjectIndex + 1}`] || ''}
-                                  onChange={(e) => handleYearChange(`Matéria ${subjectIndex + 1}`, e.target.value)}
+                                  value={year[materia.nome] || ''}
+                                  onChange={(e) => handleYearChange(materia.nome, e.target.value)}
                                   label="Ano da Matéria"
                                   sx={{
                                     color: '#0085EA',
@@ -400,10 +414,9 @@ const MinhasMaterias: React.FC = () => {
                                 </Select>
                               </FormControl>
 
-
                               <Button
                                 variant="outlined"
-                                onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
+                                onClick={() => handleOpenModal(materia.nome)}
                                 sx={{
                                   marginLeft: 2,
                                   borderColor: '#006BB3',
@@ -426,84 +439,79 @@ const MinhasMaterias: React.FC = () => {
               </Box>
             )}
 
-           
-
             {activeTab === 'feitas' && (
               <Box sx={{ width: '100%' }}>
-              {loading === true ? (
-                <CircularProgress color="primary" />
-              ) : (
-                [...Array( 2 * (Number(currentDate.getFullYear()) - Number(anoIngresso)) + 1).keys()].map((index) => (
-                  <Accordion
-                    key={index}
-                    sx={{
-                      backgroundColor: '#003B56', // Cor de fundo escura
-                      borderRadius: 1,
-                      '&:before': {
-                        display: 'none', // Remove a linha de borda padrão
-                      },
-                      boxShadow: 'none', // Retira sombra
-                      '&.Mui-expanded': {
-                        backgroundColor: '#006BB3', // Cor quando expandido
-                      },
-                    }}
-                  >
-                    <AccordionSummary
+                {loading === true ? (
+                  <CircularProgress color="primary" />
+                ) : (
+                  [...Array(2 * (Number(currentDate.getFullYear()) - Number(anoIngresso)) + 1).keys()].map((index) => (
+                    <Accordion
+                      key={index}
                       sx={{
-                        backgroundColor: '#006BB3', // Cor de fundo da summary
-                        color: '#FFFFFF', // Texto branco
+                        backgroundColor: '#003B56', // Cor de fundo escura
+                        borderRadius: 1,
+                        '&:before': {
+                          display: 'none', // Remove a linha de borda padrão
+                        },
+                        boxShadow: 'none', // Retira sombra
                         '&.Mui-expanded': {
-                          backgroundColor: '#006BB3', // Cor de fundo ao expandir
+                          backgroundColor: '#006BB3', // Cor quando expandido
                         },
                       }}
                     >
-                      
-                      <Typography sx={{ fontWeight: 'bold', fontSize: 16 }}>
-                        {`${Number(anoIngresso) + Math.floor(index / 2)}.${(index % 2) + 1}`}
-                      </Typography>
-
-                    </AccordionSummary>
-                    <AccordionDetails sx={{ backgroundColor: '#00213A', color: '#FFFFFF' }}>
-                      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        {[...Array(5).keys()].map((subjectIndex) => (
-                          <Box
-                            key={subjectIndex}
-                            sx={{
-                              display: 'flex',
-                              justifyContent: 'space-between',
-                              alignItems: 'center',
-                              padding: 1.5,
-                              backgroundColor: '#00111F', // Fundo escuro
-                              borderRadius: 1,
-                            }}
-                          >
-                            <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              <Button
-                                variant="outlined"
-                                onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
-                                sx={{
-                                  marginLeft: 2,
-                                  borderColor: '#0085EA',
-                                  color: '#0085EA',
-                                  '&:hover': {
+                      <AccordionSummary
+                        sx={{
+                          backgroundColor: '#006BB3', // Cor de fundo da summary
+                          color: '#FFFFFF', // Texto branco
+                          '&.Mui-expanded': {
+                            backgroundColor: '#006BB3', // Cor de fundo ao expandir
+                          },
+                        }}
+                      >
+                        <Typography sx={{ fontWeight: 'bold', fontSize: 16 }}>
+                          {`${Number(anoIngresso) + Math.floor(index / 2)}.${(index % 2) + 1}`}
+                        </Typography>
+                      </AccordionSummary>
+                      <AccordionDetails sx={{ backgroundColor: '#00213A', color: '#FFFFFF' }}>
+                        <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                          {[...Array(5).keys()].map((subjectIndex) => (
+                            <Box
+                              key={subjectIndex}
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                padding: 1.5,
+                                backgroundColor: '#00111F', // Fundo escuro
+                                borderRadius: 1,
+                              }}
+                            >
+                              <Typography sx={{ color: '#FFFFFF' }}>Matéria {subjectIndex + 1}</Typography>
+                              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                                <Button
+                                  variant="outlined"
+                                  onClick={() => handleOpenModal(`Matéria ${subjectIndex + 1}`)}
+                                  sx={{
+                                    marginLeft: 2,
                                     borderColor: '#0085EA',
                                     color: '#0085EA',
-                                  },
-                                }}
-                              >
-                                Ver Detalhes
-                              </Button>
+                                    '&:hover': {
+                                      borderColor: '#0085EA',
+                                      color: '#0085EA',
+                                    },
+                                  }}
+                                >
+                                  Ver Detalhes
+                                </Button>
+                              </Box>
                             </Box>
-                          </Box>
-                        ))}
-                      </Box>
-                    </AccordionDetails>
-                  </Accordion>
-                ))
-              )}
-            </Box>
-            
+                          ))}
+                        </Box>
+                      </AccordionDetails>
+                    </Accordion>
+                  ))
+                )}
+              </Box>
             )}
 
             {/* Modal de informações da matéria */}
