@@ -26,12 +26,7 @@ const theme = createTheme({
 const IndexPage: React.FC = () => {
   const router = useRouter();
   const { id, nome, email, matricula, notAuthorized } = router.query; // Captura 'nome' da navegação
-  const notifications = [
-    "Você tem uma nova mensagem.",
-    "Sua matrícula foi confirmada.",
-    "Novo evento adicionado à sua agenda.",
-    "Lembre-se de completar seu perfil.",
-  ];
+
 
   const userData = {
     id: id as string, // Adiciona o id
@@ -66,7 +61,7 @@ const IndexPage: React.FC = () => {
         }}
       >
         {/* Header */}
-        <Header notifications={notifications} />
+        <Header/>
         <Typography
           variant="h5"
           sx={{ color: "#FFFFFF", textAlign: "center", marginTop: 2 }}

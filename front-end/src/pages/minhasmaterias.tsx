@@ -38,12 +38,6 @@ const theme = createTheme({
 const MinhasMaterias: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [activeTab, setActiveTab] = useState<'feitas' | 'inserir'>('feitas');
-  const [notifications] = useState([
-    'Você tem uma nova mensagem.',
-    'Sua matrícula foi confirmada.',
-    'Novo evento adicionado à sua agenda.',
-    'Lembre-se de completar seu perfil.',
-  ]);
   const [openModal, setOpenModal] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState<string | null>(null);
   const [status, setStatus] = useState<{ [key: string]: string }>({});
@@ -184,19 +178,7 @@ const MinhasMaterias: React.FC = () => {
         }}
       >
         {/* Navbar */}
-        <Header notifications={notifications} />
-
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          {notifications.map((notification, index) => (
-            <MenuItem key={index} onClick={handleClose}>
-              {notification}
-            </MenuItem>
-          ))}
-        </Menu>
+        <Header/>
 
         {/* Conteúdo Principal */}
         <Box sx={{ textAlign: 'center', marginTop: 5 }}>

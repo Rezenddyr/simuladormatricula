@@ -8,14 +8,9 @@ import {
   Box,
   Link as MuiLink,
 } from "@mui/material";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import * as API from "../utils/api";
 
-interface HeaderProps {
-  notifications: string[];
-}
-
-const Header: React.FC<HeaderProps> = ({ notifications }) => {
+const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -31,7 +26,7 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
       <Toolbar>
         {/* Logo à esquerda */}
         <MuiLink
-          href="/inicial"
+          href="/"
           sx={{ display: "flex", alignItems: "center", textDecoration: "none" }}
         >
           <img
@@ -89,23 +84,8 @@ const Header: React.FC<HeaderProps> = ({ notifications }) => {
         {/* Espaço para empurrar os elementos à direita */}
         <Box sx={{ flexGrow: 1 }} />
 
-        {/* Botão de Notificação */}
-        <IconButton edge="end" color="inherit" onClick={handleClick}>
-          <NotificationsIcon />
-        </IconButton>
 
-        {/* Menu de Notificações */}
-        <Menu
-          anchorEl={anchorEl}
-          open={Boolean(anchorEl)}
-          onClose={handleClose}
-        >
-          {notifications.map((notification, index) => (
-            <MenuItem key={index} onClick={handleClose}>
-              {notification}
-            </MenuItem>
-          ))}
-        </Menu>
+
       </Toolbar>
     </AppBar>
   );
