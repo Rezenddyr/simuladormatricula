@@ -47,7 +47,7 @@ function sendPasswordRecoveryEmail($userEmail) {
             <p>A senha pode ser alterada posteriormente ao fazer o login.</p>
             <p>Se você não solicitou isso, ignore este e-mail.</p>
 ";
-        $mail->AltBody = "Olá,\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo para continuar:\n\nhttp://localhost:3000/esquecisenha={$randomPassword}\n\nSe você não solicitou isso, ignore este e-mail.";
+        $mail->AltBody = "Olá,\n\nRecebemos uma solicitação para redefinir sua senha. Use o link abaixo para continuar:\n\n Se você não solicitou isso, ignore este e-mail.";
 
         // Envia o email
         $mail->send();
