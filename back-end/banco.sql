@@ -30,6 +30,21 @@ insert into `aluno` (`email`, `id_aluno`, `matricula`, `nome`, `senha`) values (
 insert into `aluno` (`email`, `id_aluno`, `matricula`, `nome`, `senha`) values ('dweb2024.2@gmail.com', '20192026289', '20203026299', 'arthur', '$2y$12$jSjbKaKem.e21Kx.e4Zvq.3HIJ4PzCehA8QvvoHgcp4ZhjulKyxcK');
 
 
+CREATE TABLE `professor` (
+  `id_professor` int NOT NULL AUTO_INCREMENT,
+  `nome` varchar(255) NOT NULL,
+  `ingresso` varchar(255) NOT NULL,
+  `vinculo` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_professor`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof1@example.com', 1, '2020', 'Professor 1', 'Efetivo');
+insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof2@example.com', 2, '2020', 'Professor 2', 'Efetivo');
+insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof3@example.com', 3, '2020', 'Professor 3', 'Efetivo');
+insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof4@example.com', 4, '2020', 'Professor 4', 'Efetivo');
+insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof5@example.com', 5, '2020', 'Professor 5', 'Efetivo');
+insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof6@example.com', 6, '2020', 'Professor 6', 'Efetivo');
+insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof7@example.com', 7, '2020', 'Professor 7', 'Efetivo');
+
 CREATE TABLE `materia` (
   `codigo` varchar(255) NOT NULL,
   `nome` varchar(255) NOT NULL,
@@ -184,17 +199,3 @@ insert into `password_resets` (`email`, `expires_at`, `id`, `token`) values ('yu
 insert into `password_resets` (`email`, `expires_at`, `id`, `token`) values ('yurimoreiraferreira@hotmail.com', '2025-01-21 02:15:22', 7, '5acde3658c1a9e508a03378ee3316249f943c50c528b893f0621dd42372ce096');
 
 
-CREATE TABLE `professor` (
-  `id_professor` int NOT NULL AUTO_INCREMENT,
-  `nome` varchar(255) NOT NULL,
-  `ingresso` varchar(255) NOT NULL,
-  `vinculo` varchar(255) NOT NULL,
-  `email` varchar(255) NOT NULL,
-  PRIMARY KEY (`id_professor`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof1@example.com', 1, '2020', 'Professor 1', 'Efetivo');
-insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof2@example.com', 2, '2020', 'Professor 2', 'Efetivo');
-insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof3@example.com', 3, '2020', 'Professor 3', 'Efetivo');
-insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof4@example.com', 4, '2020', 'Professor 4', 'Efetivo');
-insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof5@example.com', 5, '2020', 'Professor 5', 'Efetivo');
-insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof6@example.com', 6, '2020', 'Professor 6', 'Efetivo');
-insert into `professor` (`email`, `id_professor`, `ingresso`, `nome`, `vinculo`) values ('prof7@example.com', 7, '2020', 'Professor 7', 'Efetivo');
