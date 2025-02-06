@@ -48,10 +48,138 @@ const MinhasMaterias: React.FC = () => {
   const [matricula, setMatricula] = useState<string | null>(null);
   const [anoIngresso, setAnoIngresso] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [schedule, setSchedule] = useState<{ [key: string]: string }>({});
   const [materiasPorPeriodo, setMateriasPorPeriodo] = useState<{
     [key: number]: any[];
   }>({});
   const [materiasFeitas, setMateriasFeitas] = useState<any[]>([]);
+
+  const handleScheduleChange = (nomeMateria: string, valor: string) => {
+    setSchedule((prev) => ({
+      ...prev,
+      [nomeMateria]: valor,
+    }));
+  };
+
+  const handleSaveHorarios = async () => {
+    try {
+      console.log("Horários selecionados:", schedule);
+
+      // Prepara os dados dos horários
+      const horariosToSave = Object.keys(schedule).map((materia) => {
+        const materiaData = Object.values(materiasPorPeriodo)
+          .flat()
+          .find((m) => m.nome === materia);
+
+        return {
+          codigo: materiaData?.codigo,
+          horario: schedule[materia],
+        };
+      });
+
+      console.log(
+        "📤 Dados preparados para envio:",
+        JSON.stringify(
+          {
+            materias: horariosToSave,
+          },
+          null,
+          2
+        )
+      );
+
+      // Envia para o backend
+      const response = await fetch(
+        API.URL + "src/materias/horarioMateria.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            materias: horariosToSave,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      console.log("📥 Resposta do servidor:", data);
+
+      if (!response.ok || data.error) {
+        throw new Error("Erro ao registrar horários.");
+      }
+
+      console.log("Horários registrados com sucesso!");
+      alert("Horários registrados com sucesso!");
+    } catch (error) {
+      console.error("Erro ao salvar horários:", error);
+      alert("Erro ao registrar os horários. Tente novamente.");
+    }
+  };
+
+  const handleSaveMaterias = async () => {
+    try {
+      console.log("Valor original de matricula:", matricula);
+      console.log("Tipo de matricula:", typeof matricula);
+      console.log("Valor enviado para id_aluno (matricula):", matricula);
+      console.log("Status atual:", status);
+      console.log("Ano atual:", year);
+      console.log("Horários selecionados:", schedule);
+
+      // Prepara os dados das matérias a serem salvas
+      const materiasToSave = Object.keys(status).map((materia) => {
+        const materiaData = Object.values(materiasPorPeriodo)
+          .flat()
+          .find((m) => m.nome === materia);
+
+        return {
+          id_materia: materiaData?.codigo,
+          status: status[materia],
+          ano: year[materia] || null,
+        };
+      });
+
+      console.log("Dados enviados para o backend:", {
+        id_aluno: matricula,
+        materias: materiasToSave,
+      });
+
+      // Faz a requisição para salvar as matérias
+      const responseMaterias = await fetch(
+        API.URL + "src/materias/saveMateriasFeitas.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            id_aluno: Number(matricula),
+            materias: materiasToSave,
+          }),
+        }
+      );
+
+      const dataMaterias = await responseMaterias.json();
+
+      // Verifica a resposta do servidor para as matérias
+      if (responseMaterias.ok && !dataMaterias.error) {
+        console.log("Matérias registradas com sucesso!");
+        alert("Matérias registradas com sucesso!");
+
+        // Após salvar as matérias, salva os horários
+        await handleSaveHorarios();
+      } else {
+        console.error("Erro ao salvar matérias:", dataMaterias.error);
+        alert(
+          "Erro ao registrar matérias, verifique campos e tente novamente."
+        );
+      }
+    } catch (error) {
+      console.error("Erro ao salvar matérias:", error);
+      alert("Erro de conexão ao registrar matérias.");
+    }
+  };
 
   const fetchMatricula = async () => {
     try {
@@ -98,66 +226,6 @@ const MinhasMaterias: React.FC = () => {
     }
   };
 
-  const handleSaveMaterias = async () => {
-    try {
-      console.log("Valor original de matricula:", matricula);
-      console.log("Tipo de matricula:", typeof matricula);
-      console.log("Valor enviado para id_aluno (matricula):", matricula);
-      console.log("Status atual:", status);
-      console.log("Ano atual:", year);
-
-      // Prepara os dados das matérias a serem salvas
-      const materiasToSave = Object.keys(status).map((materia) => {
-        const materiaData = Object.values(materiasPorPeriodo)
-          .flat() // Junta todas as matérias de diferentes períodos
-          .find((m) => m.nome === materia); // Busca pelo nome da matéria
-
-        return {
-          id_materia: materiaData?.codigo,
-          status: status[materia],
-          ano: year[materia] || null,
-        };
-      });
-
-      console.log("Dados enviados para o backend:", {
-        id_aluno: matricula,
-        materias: materiasToSave,
-        status: status,
-        year: year,
-      });
-
-      // Faz a requisição para salvar no backend
-      const response = await fetch(
-        API.URL + "src/materias/saveMateriasFeitas.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            id_aluno: Number(matricula),
-            materias: materiasToSave,
-          }),
-        }
-      );
-
-      const data = await response.json();
-
-      // Verifica a resposta do servidor
-      if (response.ok && !data.error) {
-        alert("Matérias registradas com sucesso!");
-      } else {
-        console.error("Erro ao salvar matérias:", data.error);
-        alert(
-          "Erro ao registrar matérias, verifique campos e tente novamente."
-        );
-      }
-    } catch (error) {
-      console.error("Erro ao salvar matérias:", error);
-      alert("Erro de conexão ao registrar matérias.");
-    }
-  };
-
   const fetchMateriasFeitas = async () => {
     try {
       console.log("Iniciando a busca de matérias feitas...");
@@ -187,7 +255,6 @@ const MinhasMaterias: React.FC = () => {
       const data = await response.json();
       console.log("Matérias feitas recebidas:", data.materias);
 
-      // Exemplo: Atualizar o estado das matérias feitas (se necessário)
       setMateriasFeitas(data.materias || []);
     } catch (error) {
       console.error("Erro ao buscar matérias feitas:", error);
@@ -202,9 +269,9 @@ const MinhasMaterias: React.FC = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          action: "delete", // Define que é uma exclusão
-          id_aluno: Number(matricula), // ID do aluno
-          id_materia: idMateria, // ID da matéria
+          action: "delete",
+          id_aluno: Number(matricula),
+          id_materia: idMateria,
         }),
       });
 
@@ -212,7 +279,6 @@ const MinhasMaterias: React.FC = () => {
 
       if (response.ok) {
         alert(data.message);
-        // Atualize a lista de matérias após a exclusão
         fetchMateriasFeitas();
       } else {
         alert(data.error || "Erro ao excluir a matéria.");
@@ -316,12 +382,9 @@ const MinhasMaterias: React.FC = () => {
           },
         }}
       >
-        {/* Navbar */}
         <Header />
 
-        {/* Conteúdo Principal */}
         <Box sx={{ textAlign: "center", marginTop: 5 }}>
-          {/* Botões de navegação */}
           <Box
             sx={{
               display: "flex",
@@ -344,7 +407,7 @@ const MinhasMaterias: React.FC = () => {
               }}
               onClick={() => handleTabChange("feitas")}
             >
-              Matérias Feitas
+              Matérias
             </Button>
 
             <Button
@@ -366,7 +429,6 @@ const MinhasMaterias: React.FC = () => {
             </Button>
           </Box>
 
-          {/* Conteúdo das abas */}
           <Box
             sx={{
               display: "flex",
@@ -374,15 +436,15 @@ const MinhasMaterias: React.FC = () => {
               alignItems: "center",
               flexDirection: "column",
               minHeight: "300px",
-              width: "90%", // Aumente a largura para 90%
+              width: "90%",
               margin: "0 auto",
               backgroundColor: "#00213A",
               color: "#FFFFFF",
               padding: 3,
               borderRadius: 2,
               boxShadow: 3,
-              overflowY: "auto", // Scrollbar dinâmica
-              flexGrow: 1, // Permite que o conteúdo se expanda e use o espaço disponível
+              overflowY: "auto",
+              flexGrow: 1,
             }}
           >
             {activeTab === "inserir" && (
@@ -391,23 +453,23 @@ const MinhasMaterias: React.FC = () => {
                   <Accordion
                     key={index}
                     sx={{
-                      backgroundColor: "#003B56", // Cor de fundo escura
+                      backgroundColor: "#003B56",
                       borderRadius: 1,
                       "&:before": {
-                        display: "none", // Remove a linha de borda padrão
+                        display: "none",
                       },
-                      boxShadow: "none", // Retira sombra
+                      boxShadow: "none",
                       "&.Mui-expanded": {
-                        backgroundColor: "#006BB3", // Cor quando expandido
+                        backgroundColor: "#006BB3",
                       },
                     }}
                   >
                     <AccordionSummary
                       sx={{
-                        backgroundColor: "#006BB3", // Cor de fundo da summary
-                        color: "#FFFFFF", // Texto branco
+                        backgroundColor: "#006BB3",
+                        color: "#FFFFFF",
                         "&.Mui-expanded": {
-                          backgroundColor: "#006BB3", // Cor de fundo ao expandir
+                          backgroundColor: "#006BB3",
                         },
                       }}
                     >
@@ -434,7 +496,7 @@ const MinhasMaterias: React.FC = () => {
                                 justifyContent: "space-between",
                                 alignItems: "center",
                                 padding: 1.7,
-                                backgroundColor: "#00111F", // Fundo escuro
+                                backgroundColor: "#00111F",
                                 borderRadius: 1,
                               }}
                             >
@@ -460,7 +522,6 @@ const MinhasMaterias: React.FC = () => {
                                   >
                                     Status
                                   </InputLabel>
-
                                   <Select
                                     labelId={`status-label-${subjectIndex}`}
                                     value={status[materia.nome] || "Não Feita"}
@@ -473,27 +534,27 @@ const MinhasMaterias: React.FC = () => {
                                     label="Status"
                                     sx={{
                                       color: "#0085EA",
-                                      height: 48, // Definir a altura do Select
+                                      height: 48,
                                       ".MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#0085EA", // Cor padrão da borda
+                                        borderColor: "#0085EA",
                                       },
                                       "&:hover .MuiOutlinedInput-notchedOutline":
                                         {
-                                          borderColor: "#0056B3", // Cor da borda no hover
+                                          borderColor: "#0056B3",
                                         },
                                       "&.Mui-focused .MuiOutlinedInput-notchedOutline":
                                         {
-                                          borderColor: "#003F7D", // Cor da borda ao focar
+                                          borderColor: "#003F7D",
                                         },
                                       ".MuiSelect-icon": {
-                                        color: "#0085EA", // Cor da setinha do dropdown
+                                        color: "#0085EA",
                                       },
                                     }}
                                     MenuProps={{
                                       PaperProps: {
                                         sx: {
-                                          backgroundColor: "#00111F", // Cor de fundo do dropdown
-                                          color: "#FFFFFF", // Cor do texto das opções
+                                          backgroundColor: "#00111F",
+                                          color: "#FFFFFF",
                                         },
                                       },
                                     }}
@@ -527,7 +588,6 @@ const MinhasMaterias: React.FC = () => {
                                   >
                                     Ano da Matéria
                                   </InputLabel>
-
                                   <Select
                                     labelId={`year-label-${subjectIndex}`}
                                     value={year[materia.nome] || ""}
@@ -540,32 +600,31 @@ const MinhasMaterias: React.FC = () => {
                                     label="Ano da Matéria"
                                     sx={{
                                       color: "#0085EA",
-                                      height: 48, // Definir a altura do Select
+                                      height: 48,
                                       ".MuiOutlinedInput-notchedOutline": {
-                                        borderColor: "#0085EA", // Definir a cor da borda
+                                        borderColor: "#0085EA",
                                       },
                                       "&:hover .MuiOutlinedInput-notchedOutline":
                                         {
-                                          borderColor: "#0056B3", // Cor da borda no hover
+                                          borderColor: "#0056B3",
                                         },
                                       "&.Mui-focused .MuiOutlinedInput-notchedOutline":
                                         {
-                                          borderColor: "#003F7D", // Cor da borda ao focar
+                                          borderColor: "#003F7D",
                                         },
                                       ".MuiSelect-icon": {
-                                        color: "#0085EA", // Cor da setinha do dropdown
+                                        color: "#0085EA",
                                       },
                                     }}
                                     MenuProps={{
                                       PaperProps: {
                                         sx: {
-                                          backgroundColor: "#00111F", // Cor de fundo do dropdown
-                                          color: "#FFFFFF", // Cor do texto das opções
+                                          backgroundColor: "#00111F",
+                                          color: "#FFFFFF",
                                         },
                                       },
                                     }}
                                   >
-                                    {/* Opção "Selecione" como o valor inicial */}
                                     <MuiMenuItem value="">
                                       Selecione
                                     </MuiMenuItem>
@@ -577,6 +636,86 @@ const MinhasMaterias: React.FC = () => {
                                     ))}
                                   </Select>
                                 </FormControl>
+
+                                {status[materia.nome] === "Em Andamento" && (
+                                  <FormControl
+                                    variant="outlined"
+                                    sx={{
+                                      marginLeft: 1,
+                                      minWidth: 160,
+                                      height: "auto",
+                                    }}
+                                  >
+                                    <InputLabel
+                                      id={`schedule-label-${subjectIndex}`}
+                                      sx={{
+                                        height: 48,
+                                        color: "#0085EA",
+                                      }}
+                                    >
+                                      Horário
+                                    </InputLabel>
+                                    <Select
+                                      labelId={`schedule-label-${subjectIndex}`}
+                                      value={schedule[materia.nome] || ""}
+                                      onChange={(e) =>
+                                        handleScheduleChange(
+                                          materia.nome,
+                                          e.target.value
+                                        )
+                                      }
+                                      label="Horário"
+                                      sx={{
+                                        color: "#0085EA",
+                                        height: 48,
+                                        ".MuiOutlinedInput-notchedOutline": {
+                                          borderColor: "#0085EA",
+                                        },
+                                        "&:hover .MuiOutlinedInput-notchedOutline":
+                                          {
+                                            borderColor: "#0056B3",
+                                          },
+                                        "&.Mui-focused .MuiOutlinedInput-notchedOutline":
+                                          {
+                                            borderColor: "#003F7D",
+                                          },
+                                        ".MuiSelect-icon": {
+                                          color: "#0085EA",
+                                        },
+                                      }}
+                                      MenuProps={{
+                                        PaperProps: {
+                                          sx: {
+                                            backgroundColor: "#00111F",
+                                            color: "#FFFFFF",
+                                          },
+                                        },
+                                      }}
+                                    >
+                                      <MuiMenuItem value="">
+                                        Selecione
+                                      </MuiMenuItem>
+                                      <MuiMenuItem value="7:00 às 8:40">
+                                        7:00 às 8:40
+                                      </MuiMenuItem>
+                                      <MuiMenuItem value="9:00 às 10:40">
+                                        9:00 às 10:40
+                                      </MuiMenuItem>
+                                      <MuiMenuItem value="10:40 às 12:20">
+                                        10:40 às 12:20
+                                      </MuiMenuItem>
+                                      <MuiMenuItem value="13:20 às 15:00">
+                                        13:20 às 15:00
+                                      </MuiMenuItem>
+                                      <MuiMenuItem value="15:20 às 17:00">
+                                        15:20 às 17:00
+                                      </MuiMenuItem>
+                                      <MuiMenuItem value="17:00 às 18:40">
+                                        17:00 às 18:40
+                                      </MuiMenuItem>
+                                    </Select>
+                                  </FormControl>
+                                )}
 
                                 <Button
                                   variant="outlined"
@@ -638,14 +777,14 @@ const MinhasMaterias: React.FC = () => {
                     <Accordion
                       key={ano}
                       sx={{
-                        backgroundColor: "#003B56", // Cor de fundo
+                        backgroundColor: "#003B56",
                         borderRadius: 1,
-                        "&:before": { display: "none" }, // Remove borda padrão
+                        "&:before": { display: "none" },
                       }}
                     >
                       <AccordionSummary
                         sx={{
-                          backgroundColor: "#006BB3", // Cor de fundo ao expandir
+                          backgroundColor: "#006BB3",
                           color: "#FFFFFF",
                         }}
                       >
@@ -655,7 +794,7 @@ const MinhasMaterias: React.FC = () => {
                       </AccordionSummary>
                       <AccordionDetails
                         sx={{
-                          backgroundColor: "#00213A", // Cor do conteúdo expandido
+                          backgroundColor: "#00213A",
                           color: "#FFFFFF",
                         }}
                       >
@@ -721,7 +860,6 @@ const MinhasMaterias: React.FC = () => {
               </Box>
             )}
 
-            {/* Modal de informações da matéria */}
             <Modal
               open={openModal}
               onClose={handleCloseModal}
