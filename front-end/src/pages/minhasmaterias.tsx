@@ -54,10 +54,10 @@ const MinhasMaterias: React.FC = () => {
   }>({});
   const [materiasFeitas, setMateriasFeitas] = useState<any[]>([]);
 
-  const handleScheduleChange = (nomeMateria: string, valor: string) => {
-    setSchedule((prev) => ({
-      ...prev,
-      [nomeMateria]: valor,
+  const handleScheduleChange = (materiaNome, valoresSelecionados) => {
+    setSchedule((prevState) => ({
+      ...prevState,
+      [materiaNome]: valoresSelecionados,
     }));
   };
 
@@ -657,14 +657,17 @@ const MinhasMaterias: React.FC = () => {
                                     </InputLabel>
                                     <Select
                                       labelId={`schedule-label-${subjectIndex}`}
-                                      value={schedule[materia.nome] || ""}
+                                      multiple
+                                      value={schedule[materia.nome] || []} // Agora aceita array de valores
                                       onChange={(e) =>
                                         handleScheduleChange(
                                           materia.nome,
                                           e.target.value
                                         )
                                       }
-                                      label="Horário"
+                                      renderValue={(selected) =>
+                                        selected.join(", ")
+                                      } // Exibe os valores selecionados separados por vírgula
                                       sx={{
                                         color: "#0085EA",
                                         height: 48,
@@ -692,27 +695,42 @@ const MinhasMaterias: React.FC = () => {
                                         },
                                       }}
                                     >
-                                      <MuiMenuItem value="">
-                                        Selecione
-                                      </MuiMenuItem>
-                                      <MuiMenuItem value="7:00 às 8:40">
-                                        7:00 às 8:40
-                                      </MuiMenuItem>
-                                      <MuiMenuItem value="9:00 às 10:40">
-                                        9:00 às 10:40
-                                      </MuiMenuItem>
-                                      <MuiMenuItem value="10:40 às 12:20">
-                                        10:40 às 12:20
-                                      </MuiMenuItem>
-                                      <MuiMenuItem value="13:20 às 15:00">
-                                        13:20 às 15:00
-                                      </MuiMenuItem>
-                                      <MuiMenuItem value="15:20 às 17:00">
-                                        15:20 às 17:00
-                                      </MuiMenuItem>
-                                      <MuiMenuItem value="17:00 às 18:40">
-                                        17:00 às 18:40
-                                      </MuiMenuItem>
+                                      {[
+                                        "2M12",
+                                        "2M34",
+                                        "2M56",
+                                        "2T12",
+                                        "2T34",
+                                        "2T56",
+                                        "3M12",
+                                        "3M34",
+                                        "3M56",
+                                        "3T12",
+                                        "3T34",
+                                        "3T56",
+                                        "4M12",
+                                        "4M34",
+                                        "4M56",
+                                        "4T12",
+                                        "4T34",
+                                        "4T56",
+                                        "5M12",
+                                        "5M34",
+                                        "5M56",
+                                        "5T12",
+                                        "5T34",
+                                        "5T56",
+                                        "6M12",
+                                        "6M34",
+                                        "6M56",
+                                        "6T12",
+                                        "6T34",
+                                        "6T56",
+                                      ].map((option) => (
+                                        <MenuItem key={option} value={option}>
+                                          {option}
+                                        </MenuItem>
+                                      ))}
                                     </Select>
                                   </FormControl>
                                 )}

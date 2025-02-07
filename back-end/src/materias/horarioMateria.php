@@ -41,21 +41,21 @@ try {
     // Percorre cada matéria enviada
     foreach ($materias as $m) {
         $codigo  = $m['codigo']  ?? null;
-        $horario = $m['horario'] ?? null; // Pode ser string ou null
+        $horario = $m['horario'] ?? null; // Pode ser array ou null
 
         // Valida o código da matéria
         if (!$codigo || !is_string($codigo)) {
             throw new Exception("Código da matéria inválido ou ausente.");
         }
 
-        // Valida o horário (pode ser null ou uma string no formato esperado)
-        if ($horario !== null && !preg_match('/^\d{1,2}:\d{2} às \d{1,2}:\d{2}$/', $horario)) {
-            throw new Exception("Horário inválido para a matéria $codigo: $horario");
+        // Converte array de horários em string separada por vírgula (se for array)
+        if (is_array($horario)) {
+            $horario = implode(", ", $horario);
         }
 
         // Faz o bind dos valores
         $stmt->bindValue(':horario', $horario);
-        $stmt->bindValue(':codigo',  $codigo, PDO::PARAM_STR); // Use PDO::PARAM_STR para códigos alfanuméricos
+        $stmt->bindValue(':codigo',  $codigo, PDO::PARAM_STR);
 
         // Executa o UPDATE
         $stmt->execute();
