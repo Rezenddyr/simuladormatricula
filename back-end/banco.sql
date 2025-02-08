@@ -199,3 +199,12 @@ insert into `password_resets` (`email`, `expires_at`, `id`, `token`) values ('yu
 insert into `password_resets` (`email`, `expires_at`, `id`, `token`) values ('yurimoreiraferreira@hotmail.com', '2025-01-21 02:15:22', 7, '5acde3658c1a9e508a03378ee3316249f943c50c528b893f0621dd42372ce096');
 
 
+CREATE TABLE `notificacao` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `mensagem` varchar(255) NOT NULL,
+  `criado_em` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `notificacao` (`mensagem`, `criado_em`) VALUES ('Sua matrícula foi confirmada.', '2025-02-08 10:00:00');
+INSERT INTO `notificacao` (`mensagem`, `criado_em`) VALUES ('Nova matéria disponível para inscrição.', '2025-02-08 11:00:00');

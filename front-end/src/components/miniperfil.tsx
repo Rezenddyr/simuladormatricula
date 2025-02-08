@@ -162,30 +162,6 @@ const MiniPerfil: React.FC<MiniPerfilProps> = ({ userData }) => {
         <Typography sx={{ color: '#FFFFFF' }}>Matrícula: {userData.matricula}</Typography>
         <Typography sx={{ color: '#FFFFFF' }}>Curso: {userData.curso}</Typography>
 
-        <Typography variant="subtitle2" sx={{ marginTop: 2, marginBottom: 1, color: '#94A3B8' }}>
-          Integralizações:
-        </Typography>
-        <Typography sx={{ color: '#FFFFFF' }}>
-          CH. Obrigatória Pendente: {userData.integralizacoes.chObrigatoriaPendente} horas
-        </Typography>
-        <Typography sx={{ color: '#FFFFFF' }}>
-          CH. Optativa Pendente: {userData.integralizacoes.chOptativaPendente} horas
-        </Typography>
-        <Typography sx={{ color: '#FFFFFF' }}>
-          CH. Total Currículo: {userData.integralizacoes.chTotalCurriculo} horas
-        </Typography>
-
-        {/* Barra de progresso */}
-        <Box sx={{ marginTop: 2 }}>
-          <Typography sx={{ color: '#FFFFFF', marginBottom: 1 }}>
-            Progresso do Curso: {userData.percentualConcluido}%
-          </Typography>
-          <LinearProgress
-            variant="determinate"
-            value={userData.percentualConcluido}
-            sx={{ backgroundColor: '#3C3C3C', '& .MuiLinearProgress-bar': { backgroundColor: '#0085EA' } }}
-          />
-        </Box>
       </Box>
 
       <Modal

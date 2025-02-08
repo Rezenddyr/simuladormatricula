@@ -4,7 +4,7 @@ import { createTheme } from "@mui/material/styles";
 import Login from "./index";
 import Header from "@/components/header";
 import MiniPerfil from "@/components/miniperfil";
-import Funcionalidades from "@/components/funcionalidades";
+import Dashboard from "@/components/dashboard";
 import { useRouter } from "next/router";
 import { Typography } from "@mui/material";
 import { isAuthorized } from "../utils/auth";
@@ -73,7 +73,7 @@ const IndexPage: React.FC = () => {
         <MiniPerfil userData={userData} />
 
         {/* Funcionalidades */}
-        <Funcionalidades />
+        <Dashboard />
       </Box>
     </ThemeProvider>
   );

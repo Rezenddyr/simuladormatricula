@@ -539,13 +539,13 @@ const MinhasMaterias: React.FC = () => {
                                         borderColor: "#0085EA",
                                       },
                                       "&:hover .MuiOutlinedInput-notchedOutline":
-                                        {
-                                          borderColor: "#0056B3",
-                                        },
+                                      {
+                                        borderColor: "#0056B3",
+                                      },
                                       "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                        {
-                                          borderColor: "#003F7D",
-                                        },
+                                      {
+                                        borderColor: "#003F7D",
+                                      },
                                       ".MuiSelect-icon": {
                                         color: "#0085EA",
                                       },
@@ -605,13 +605,13 @@ const MinhasMaterias: React.FC = () => {
                                         borderColor: "#0085EA",
                                       },
                                       "&:hover .MuiOutlinedInput-notchedOutline":
-                                        {
-                                          borderColor: "#0056B3",
-                                        },
+                                      {
+                                        borderColor: "#0056B3",
+                                      },
                                       "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                        {
-                                          borderColor: "#003F7D",
-                                        },
+                                      {
+                                        borderColor: "#003F7D",
+                                      },
                                       ".MuiSelect-icon": {
                                         color: "#0085EA",
                                       },
@@ -675,13 +675,13 @@ const MinhasMaterias: React.FC = () => {
                                           borderColor: "#0085EA",
                                         },
                                         "&:hover .MuiOutlinedInput-notchedOutline":
-                                          {
-                                            borderColor: "#0056B3",
-                                          },
+                                        {
+                                          borderColor: "#0056B3",
+                                        },
                                         "&.Mui-focused .MuiOutlinedInput-notchedOutline":
-                                          {
-                                            borderColor: "#003F7D",
-                                          },
+                                        {
+                                          borderColor: "#003F7D",
+                                        },
                                         ".MuiSelect-icon": {
                                           color: "#0085EA",
                                         },
@@ -791,89 +791,89 @@ const MinhasMaterias: React.FC = () => {
                       acc[ano].push(materia);
                       return acc;
                     }, {})
-                  ).map(([ano, materias]) => (
-                    <Accordion
-                      key={ano}
-                      sx={{
-                        backgroundColor: "#003B56",
-                        borderRadius: 1,
-                        "&:before": { display: "none" },
-                      }}
-                    >
-                      <AccordionSummary
+                  )
+                    .sort(([anoA], [anoB]) => anoA.localeCompare(anoB)) // Ordena os anos
+                    .map(([ano, materias]) => (
+                      <Accordion
+                        key={ano}
                         sx={{
-                          backgroundColor: "#006BB3",
-                          color: "#FFFFFF",
+                          backgroundColor: "#003B56",
+                          borderRadius: 1,
+                          "&:before": { display: "none" },
                         }}
                       >
-                        <Typography sx={{ fontWeight: "bold", fontSize: 16 }}>
-                          Ano: {ano}
-                        </Typography>
-                      </AccordionSummary>
-                      <AccordionDetails
-                        sx={{
-                          backgroundColor: "#00213A",
-                          color: "#FFFFFF",
-                        }}
-                      >
-                        {materias.map((materia) => (
-                          <Box
-                            key={materia.id}
-                            sx={{
-                              padding: 1.5,
-                              marginBottom: 1,
-                              border: "1px solid #006BB3",
-                              borderRadius: 1,
-                            }}
-                          >
-                            <Typography>
-                              <strong>Código:</strong> {materia.id_materia}
-                            </Typography>
-                            <Typography>
-                              <strong>Nome:</strong>{" "}
-                              {materia.nome_materia || "Nome da Matéria"}
-                            </Typography>
-                            <Typography>
-                              <strong>Status:</strong> {materia.status}
-                            </Typography>
-                            <Button
-                              variant="outlined"
+                        <AccordionSummary
+                          sx={{
+                            backgroundColor: "#006BB3",
+                            color: "#FFFFFF",
+                          }}
+                        >
+                          <Typography sx={{ fontWeight: "bold", fontSize: 16 }}>
+                            Ano: {ano}
+                          </Typography>
+                        </AccordionSummary>
+                        <AccordionDetails
+                          sx={{
+                            backgroundColor: "#00213A",
+                            color: "#FFFFFF",
+                          }}
+                        >
+                          {materias.map((materia) => (
+                            <Box
+                              key={materia.id}
                               sx={{
-                                marginTop: 1,
-                                borderColor: "#006BB3",
-                                color: "#006BB3",
-                                "&:hover": {
-                                  borderColor: "#0085EA",
-                                  color: "#0085EA",
-                                },
+                                padding: 1.5,
+                                marginBottom: 1,
+                                border: "1px solid #006BB3",
+                                borderRadius: 1,
                               }}
                             >
-                              Ver Detalhes
-                            </Button>
-                            <Button
-                              variant="outlined"
-                              color="error"
-                              onClick={() =>
-                                handleDeleteMateria(materia.id_materia)
-                              }
-                              sx={{
-                                marginTop: 1,
-                                marginLeft: 5,
-                                borderColor: "#FF0000",
-                                color: "#FF0000",
-                                "&:hover": {
-                                  borderColor: "#FF3333",
-                                  color: "#FF3333",
-                                },
-                              }}
-                            >
-                              Excluir
-                            </Button>
-                          </Box>
-                        ))}
-                      </AccordionDetails>
-                    </Accordion>
-                  ))
+                              <Typography>
+                                <strong>Código:</strong> {materia.id_materia}
+                              </Typography>
+                              <Typography>
+                                <strong>Nome:</strong>{" "}
+                                {materia.nome_materia || "Nome da Matéria"}
+                              </Typography>
+                              <Typography>
+                                <strong>Status:</strong> {materia.status}
+                              </Typography>
+                              <Button
+                                variant="outlined"
+                                sx={{
+                                  marginTop: 1,
+                                  borderColor: "#006BB3",
+                                  color: "#006BB3",
+                                  "&:hover": {
+                                    borderColor: "#0085EA",
+                                    color: "#0085EA",
+                                  },
+                                }}
+                              >
+                                Ver Detalhes
+                              </Button>
+                              <Button
+                                variant="outlined"
+                                color="error"
+                                onClick={() => handleDeleteMateria(materia.id_materia)}
+                                sx={{
+                                  marginTop: 1,
+                                  marginLeft: 5,
+                                  borderColor: "#FF0000",
+                                  color: "#FF0000",
+                                  "&:hover": {
+                                    borderColor: "#FF3333",
+                                    color: "#FF3333",
+                                  },
+                                }}
+                              >
+                                Excluir
+                              </Button>
+                            </Box>
+                          ))}
+                        </AccordionDetails>
+                      </Accordion>
+                    ))
                 )}
               </Box>
             )}

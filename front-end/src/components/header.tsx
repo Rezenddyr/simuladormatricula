@@ -9,6 +9,8 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 import * as API from "../utils/api";
+import NotificationButton from '@/components/notificacao';
+
 
 const Header: React.FC = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -41,8 +43,8 @@ const Header: React.FC = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            fontSize: 20,
-            gap: 15,
+            fontSize: 15,
+            gap: 10,
             marginLeft: 10,
           }}
         >
@@ -68,23 +70,13 @@ const Header: React.FC = () => {
           >
             Horário
           </MuiLink>
-          <MuiLink
-            href="/notas"
-            sx={{
-              color: "#FFFFFF",
-              textDecoration: "none",
-              "&:hover": { color: "#0085EA" },
-              fontWeight: "bold",
-            }}
-          >
-            Notas
-          </MuiLink>
         </Box>
 
         {/* Espaço para empurrar os elementos à direita */}
         <Box sx={{ flexGrow: 1 }} />
 
 
+        {/* <NotificationButton /> */}
 
       </Toolbar>
     </AppBar>
