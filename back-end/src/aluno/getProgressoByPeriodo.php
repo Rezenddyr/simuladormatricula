@@ -40,38 +40,36 @@ if (isset($headers['Authorization'])){
     }
     //VAI TOMAR NO CU YURI ESSA MERDA NÃO FUNCIONA PQ A PORRA DO TOKEN 
     //NÃO TEM A MATRICULA SO O ID E A CHAVE NA MATERIA FEITA TA PUXANDO A MATRICULA
-    try{
-    // fui mlk e botei a matricula pra vir no token e to usando no lugar do id
-        $query = "SELECT * FROM materias_feitas WHERE id_aluno = :matricula";
-        $stmt = $conn->prepare($query);
-        $stmt->bindParam(':matricula', $matricula);
-        $stmt->execute();
-        $materiasFeitas = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        for ($i = 0; $i < count($materiasFeitas); $i++) {
-            $query = "SELECT * FROM materia WHERE codigo = :codigo";
+    if(isset($dados['selectedPeriod'])){
+        $periodo = $dados['selectedPeriod'];
+        try{
+            // fui mlk e botei a matricula pra vir no token e to usando no lugar do id
+            $query = "SELECT * FROM materias_feitas WHERE id_aluno = :matricula AND ano = :periodo";
             $stmt = $conn->prepare($query);
-            $stmt->bindParam(':codigo', $materiasFeitas[$i]['id_materia']);
+            $stmt->bindParam(':periodo', $periodo);
+            $stmt->bindParam(':matricula', $matricula);
             $stmt->execute();
-            $materia = $stmt->fetch(PDO::FETCH_ASSOC);
-            $materiasFeitas[$i]['carga_horaria'] = $materia['carga_horaria'];
-            $materiasFeitas[$i]['periodo'] = $materia['periodo'];
-        }
-        $sumCh = 0;
-        $sumChOp = 0;
-        for ($i = 0; $i < count($materiasFeitas); $i++) {
-            if($materiasFeitas[$i]['periodo'] == 'OPTATIVO'){
-                $chOp = intval($materiasFeitas[$i]['carga_horaria']);
-                $sumChOp += $chOp;
-            }else{
-            $ch = intval($materiasFeitas[$i]['carga_horaria']);
-            $sumCh += $ch;
+            $materiasFeitas = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $chPeriodo = 0;
+            for ($i = 0; $i < count($materiasFeitas); $i++) {
+                $query = "SELECT * FROM materia WHERE codigo = :codigo";
+                $stmt = $conn->prepare($query);
+                $stmt->bindParam(':codigo', $materiasFeitas[$i]['id_materia']);
+                $stmt->execute();
+                $materia = $stmt->fetch(PDO::FETCH_ASSOC);
+                $materiasFeitas[$i]['carga_horaria'] = $materia['carga_horaria'];
+                $chPeriodo += $materia['carga_horaria'];
             }
+            echo json_encode(['message' => 'Progresso do periodo encontrado com sucesso!', 'materias_feitas' => $materiasFeitas, 
+                'chPeriodo' => $chPeriodo]);
+        }catch(Exception $e){
+            http_response_code(500);
+            echo json_encode(['error' => 'Erro no servidor: ' . $e->getMessage()]);
+            exit;
         }
-        echo json_encode(['message' => 'Progresso encontrado com sucesso!', 'chRealizada' => $sumCh,
-         'materias_feitas' => $materiasFeitas, 'chOp' => $sumChOp]);
-    }catch(Exception $e){
-        http_response_code(500);
-        echo json_encode(['error' => 'Erro no servidor: ' . $e->getMessage()]);
+    }else{
+        http_response_code(400);
+        echo json_encode(['error' => 'Período selecionado não encontrado']);
         exit;
     }
 } else {
