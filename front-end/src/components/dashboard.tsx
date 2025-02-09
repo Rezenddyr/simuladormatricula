@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -12,6 +12,7 @@ import {
   useTheme,
   SelectChangeEvent // Importação corrigida aqui
 } from '@mui/material';
+import * as API from '../utils/api';
 
 
 const Dashboard: React.FC = () => {
@@ -40,6 +41,18 @@ const Dashboard: React.FC = () => {
       { name: 'Estatística', hours: 50, color: '#00B894' }
     ]
   };
+
+// const handlePeriodChange = async () => {
+//   const data = await fetch(
+//     API.URL + 'src/'
+//   )
+  
+// }
+
+//   useEffect(() => {
+
+//   };
+// }, []);
 
   const handleChangePeriod = (event: SelectChangeEvent) => { // Tipo corrigido aqui
     setSelectedPeriod(event.target.value);

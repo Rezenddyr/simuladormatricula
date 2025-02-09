@@ -5,7 +5,7 @@ CREATE TABLE `aluno` (
   `nome` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   PRIMARY KEY (`id_aluno`)
-) ENGINE=InnoDB AUTO_INCREMENT=20192026290 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;insert into `aluno` (`email`, `id_aluno`, `matricula`, `nome`, `senha`) values ('yurimoreiraferreira@Hotmail.com', '1', '20192026287', 'Yuri', '$2y$12$bL0D7ULmJypWLWzcSZsM0OdElbu./xlusOiN9eOAFMOuSXG8WcaCa');
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;insert into `aluno` (`email`, `id_aluno`, `matricula`, `nome`, `senha`) values ('yurimoreiraferreira@Hotmail.com', '1', '20192026287', 'Yuri', '$2y$12$bL0D7ULmJypWLWzcSZsM0OdElbu./xlusOiN9eOAFMOuSXG8WcaCa');
 insert into `aluno` (`email`, `id_aluno`, `matricula`, `nome`, `senha`) values ('yurimoreiraferreira@Hotmail.com', '2', '20192026287', 'Yuri', '$2y$12$bL0D7ULmJypWLWzcSZsM0OdElbu./xlusOiN9eOAFMOuSXG8WcaCa');
 insert into `aluno` (`email`, `id_aluno`, `matricula`, `nome`, `senha`) values ('yurimoreiraferreira@Hotmail.com', '3', '20192026287', 'Yuri', '$2y$12$bL0D7ULmJypWLWzcSZsM0OdElbu./xlusOiN9eOAFMOuSXG8WcaCa');
 insert into `aluno` (`email`, `id_aluno`, `matricula`, `nome`, `senha`) values ('yurimoreiraferreira@Hotmail.com', '4', '20192026287', 'Yuri', '$2y$12$bL0D7ULmJypWLWzcSZsM0OdElbu./xlusOiN9eOAFMOuSXG8WcaCa');
@@ -174,6 +174,7 @@ CREATE TABLE `materias_feitas` (
   `id_materia` varchar(50) NOT NULL,
   `status` enum('Não Feita','Em Andamento','Feita') NOT NULL DEFAULT 'Não Feita',
   `ano` varchar(10) DEFAULT NULL,
+  `nota` decimal(4,1) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `id_aluno` (`id_aluno`),
   KEY `id_materia` (`id_materia`),

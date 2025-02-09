@@ -168,7 +168,9 @@ const MinhasMaterias: React.FC = () => {
         alert("Matérias registradas com sucesso!");
 
         // Após salvar as matérias, salva os horários
+        if(Object.keys(schedule).length > 0){
         await handleSaveHorarios();
+        }
       } else {
         console.error("Erro ao salvar matérias:", dataMaterias.error);
         alert(
@@ -323,10 +325,12 @@ const MinhasMaterias: React.FC = () => {
   };
 
   const handleStatusChange = (subject: string, newStatus: string) => {
+    if(newStatus !== "Não Feita") {
     setStatus((prevStatus) => ({
       ...prevStatus,
       [subject]: newStatus,
     }));
+  }
   };
 
   const handleYearChange = (subject: string, newYear: string) => {
@@ -350,16 +354,19 @@ const MinhasMaterias: React.FC = () => {
   }, [matricula]);
 
   useEffect(() => {
+    if(activeTab === 'feitas') {
     const fetchAllMaterias = async () => {
       const materias: { [key: number]: any[] } = {};
       for (let periodo = 0; periodo <= 10; periodo++) {
         materias[periodo] = await fetchMateriasByPeriodo(periodo);
       }
       setMateriasPorPeriodo(materias);
+
     };
 
     fetchAllMaterias();
-  }, []);
+  }
+  }, [activeTab]);
 
   useEffect(() => {
     if (matricula) {
