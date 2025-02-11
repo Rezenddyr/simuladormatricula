@@ -93,7 +93,7 @@ const Dashboard: React.FC = () => {
           },
         });
       const data = await response.json();
-      console.log("📥 Resposta do servidor:", data);
+      // console.log("📥 Resposta do servidor:", data);
       if (!response.ok || data.error) {
         throw new Error("Erro ao buscar progresso.");
       } else {
@@ -146,7 +146,7 @@ const Dashboard: React.FC = () => {
           body: JSON.stringify({ selectedPeriod })
         });
       const data = await response.json();
-      console.log("📥 Resposta do servidor:", data);
+      // console.log("📥 Resposta do servidor:", data);
       if (!response.ok || data.error) {
         throw new Error("Erro ao buscar progresso.");
       }
@@ -154,9 +154,9 @@ const Dashboard: React.FC = () => {
       data['materias_feitas'].forEach((materia: Materia, index: number) => {
         materia.cor = colorArray[index];
       });
-      console.log(transformaDados(data.materias_feitas));
+      // console.log(transformaDados(data.materias_feitas));
       setPeriodData(transformaDados(data.materias_feitas));
-      console.log(periodData);
+      // console.log(periodData);
     } catch (error) {
       console.error('Erro ao buscar dados do período:', error);
     }
