@@ -14,6 +14,7 @@ import {
 } from '@mui/material';
 import * as API from '../utils/api';
 import { unique } from 'next/dist/build/utils';
+import { transform } from 'next/dist/build/swc/generated-native';
 
 
 
@@ -30,12 +31,25 @@ type periodData = Record<string, Materia[]>; // definindo o tipo dados do period
 
 const Dashboard: React.FC = () => {
   const theme = useTheme();
-  const [selectedPeriod, setSelectedPeriod] = useState('2023.1');
+  const [selectedPeriod, setSelectedPeriod] = useState('');
   const token =
     typeof window !== "undefined" ? sessionStorage.getItem("token") : null;
 
   // Dados principais do curso
-  const totalHours = 3600;
+  const totalHours = 3600;[]
+  const colorArray = ["#FF6B6B",
+  "#4ECDC4",
+  "#45B7D1", 
+  "#FFD93D", 
+  "#6C5CE7",
+  "#00B894", 
+  "#FF7675",
+  "#74B9FF", 
+  "#FDCB6E", 
+  "#A29BFE", 
+  "#55EFC4", 
+  "#D63031"  
+];
   const [completedHours, setCompletedHours] = useState(0);
   const [completedOpHours, setCompletedOpHours] = useState(0);
   const progressPercentage = (completedHours / totalHours) * 100;
@@ -88,7 +102,6 @@ const Dashboard: React.FC = () => {
         const uniquePeriods = Array.from(
           new Set(data.materias_feitas.map((materia: Materia) => materia.ano))
         );
-        console.log(uniquePeriods);
         if (uniquePeriods.length > 0){
         setPeriods((uniquePeriods as Array<string>).sort());
         setSelectedPeriod((uniquePeriods[0] as string));
@@ -100,6 +113,26 @@ const Dashboard: React.FC = () => {
   }
 
   // requisição que pede o progresso específico de cada periodo para montar o gráfico de pizza
+  const transformaDados = (respostaApi: any[]) : periodData => {
+    const transformado: periodData = {};
+    
+    respostaApi.forEach((item: any, index: number) => {
+      const materia: Materia = {
+        codigo: item.id_materia,
+        horas: parseInt(item.carga_horaria),
+        cor: item.cor || '#000000',
+        ano: item.ano
+      };
+      if (!transformado[item.ano]) {
+        transformado[item.ano] = [];
+    }
+
+    transformado[item.ano].push(materia);
+    });
+    return transformado;
+  }
+
+
   const fetchProgressoByPeriodo = async () => {
     try {
       const response = await fetch(
@@ -118,7 +151,12 @@ const Dashboard: React.FC = () => {
         throw new Error("Erro ao buscar progresso.");
       }
       setTotalPeriodHours(data.chPeriodo);
-      setPeriodData(data.materias_feitas);
+      data['materias_feitas'].forEach((materia: Materia, index: number) => {
+        materia.cor = colorArray[index];
+      });
+      console.log(transformaDados(data.materias_feitas));
+      setPeriodData(transformaDados(data.materias_feitas));
+      console.log(periodData);
     } catch (error) {
       console.error('Erro ao buscar dados do período:', error);
     }
