@@ -1,8 +1,9 @@
 <?php
 
 header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Methods: POST, OPTIONS");
-header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: POST");
+header("Content-Type: application/json");
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
@@ -19,7 +20,7 @@ $headers = getallheaders();
 
 $dados = json_decode(file_get_contents('php://input'), true);
 if (isset($headers['Authorization'])){
-    if (isset($dados['id_materia_feita']) && isset($dados['nota'])) {
+    if (isset($dados['id_materia_feita'], $dados['nota'])){
         try{
         $query = "UPDATE materias_feitas SET nota = :nota WHERE id = :id_materia_feita";
         $stmt = $conn->prepare($query);

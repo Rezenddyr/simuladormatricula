@@ -41,6 +41,7 @@ if (isset($dados['id_aluno'], $dados['materias']) && is_array($dados['materias']
             $id_materia = $materia['id_materia'];
             $status = $materia['status'];
             $ano = $materia['ano'] ?? null;
+            $nota = $materia['nota'] ?? null;
 
             // Verificar se o ano está correto (não pode ser nulo)
             if (empty($ano)) {
@@ -49,8 +50,8 @@ if (isset($dados['id_aluno'], $dados['materias']) && is_array($dados['materias']
 
             // Insere ou atualiza os registros na tabela materias_feitas
             $query = "
-                INSERT INTO materias_feitas (id_aluno, id_materia, status, ano)
-                VALUES (:id_aluno, :id_materia, :status, :ano)
+                INSERT INTO materias_feitas (id_aluno, id_materia, status, ano, nota)
+                VALUES (:id_aluno, :id_materia, :status, :ano, :nota)
                 ON DUPLICATE KEY UPDATE
                     status = VALUES(status),
                     ano = VALUES(ano)
@@ -60,6 +61,7 @@ if (isset($dados['id_aluno'], $dados['materias']) && is_array($dados['materias']
             $stmt->bindParam(':id_materia', $id_materia);
             $stmt->bindParam(':status', $status);
             $stmt->bindParam(':ano', $ano);
+            $stmt->bindParam(':nota', $nota);
             $stmt->execute();
         }
 

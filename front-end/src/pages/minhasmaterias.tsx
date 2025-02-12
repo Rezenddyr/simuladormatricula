@@ -63,6 +63,20 @@ const MinhasMaterias: React.FC = () => {
     }));
   };
 
+  const [openUpdateNotaModal, setOpenUpdateNotaModal] = useState(false);
+  const [novaNota, setNovaNota] = useState<string | null>(null);
+
+  const hadleOpenUpdateNotaModal = (idMateria) => {
+    setSelectedSubject(idMateria);
+    setOpenUpdateNotaModal(true);
+  };
+
+  const handleCloseUpdateNotaModal = () => {
+    setOpenUpdateNotaModal(false);
+    setSelectedSubject(null);
+    setNovaNota(null);
+  };
+
   const handleSaveHorarios = async () => {
     try {
       console.log("Horários selecionados:", schedule);
@@ -347,30 +361,15 @@ const MinhasMaterias: React.FC = () => {
     }));
   };
 
-  const handleSaveNotas = async () => {
+  const handleUpdateNota = async () => {
     try {
-      console.log("Notas a serem salvas:", notas);
-  
-      // Prepara os dados das notas a serem salvas
-      const notasToSave = Object.keys(notas).map((materia) => {
-        const materiaData = Object.values(materiasPorPeriodo)
-          .flat()
-          .find((m) => m.nome === materia);
-  
-        return {
-          id_materia: materiaData?.codigo,
-          nota: notas[materia],
-        };
-      });
-  
-      console.log("Dados enviados para o backend:", {
-        id_aluno: matricula,
-        notas: notasToSave,
-      });
-  
-      // Faz a requisição para salvar as notas
+      if(!selectedSubject || !novaNota) {
+        throw new Error("Selecione uma matéria e informe a nova nota.");
+        return;
+      }
+      console.log(selectedSubject, novaNota);
       const responseNotas = await fetch(
-        API.URL + "src/matriculas/inserirNotas.php",
+        API.URL + "src/matriculas/atualizaNota.php",
         {
           method: "POST",
           headers: {
@@ -378,24 +377,23 @@ const MinhasMaterias: React.FC = () => {
             Authorization: `Bearer ${token}`, // Adiciona o token de autenticação
           },
           body: JSON.stringify({
-            id_aluno: Number(matricula),
-            notas: notasToSave,
+            id_materia_feita: Number(selectedSubject),
+            nota: Number(novaNota),
           }),
-        }
-      );
+        });
   
-      const dataNotas = await responseNotas.json();
+      const dataNota = await responseNotas.json();
+      console.log("Resposta do servidor:", dataNota);
   
-      // Verifica a resposta do servidor para as notas
-      if (responseNotas.ok && !dataNotas.error) {
-        console.log("Notas registradas com sucesso!");
-        alert("Notas registradas com sucesso!");
+      // // Verifica a resposta do servidor para as notas
+      if (responseNotas.ok && !dataNota.error) {
+        alert("Nota atualizada com sucesso!");
       } else {
-        console.error("Erro ao salvar notas:", dataNotas.error);
-        alert("Erro ao registrar notas, verifique campos e tente novamente.");
-      }
+      //   console.error("Erro ao salvar notas:", dataNotas.error);
+        alert("Erro ao atualizar notas: " + dataNota.error);
+      }  
     } catch (error) {
-      console.error("Erro ao salvar notas:", error);
+      console.error("Erro ao atualizar notas:", error);
       alert("Erro de conexão ao registrar notas.");
     }
   };
@@ -984,7 +982,7 @@ const MinhasMaterias: React.FC = () => {
                               <Button
                                 variant="outlined"
                                 color="error"
-                                onClick={() => handleDeleteMateria(materia.id_materia)}
+                                onClick={() => handleDeleteMateria(materia.id)}
                                 sx={{
                                   marginTop: 1,
                                   marginLeft: 5,
@@ -998,6 +996,22 @@ const MinhasMaterias: React.FC = () => {
                               >
                                 Excluir
                               </Button>
+                              <Button
+                                variant="outlined"
+                                onClick = {() => hadleOpenUpdateNotaModal(materia.id)}
+                                sx={{
+                                  marginTop: 1,
+                                  marginLeft: 5,
+                                  borderColor: "#006BB3",
+                                  color: "#006BB3",
+                                  "&:hover": {
+                                    borderColor: "#0085EA",
+                                    color: "#0085EA",
+                                  },
+                                }}
+                              >
+                                Atualizar Nota
+                              </Button>
                             </Box>
                           ))}
                         </AccordionDetails>
@@ -1006,6 +1020,69 @@ const MinhasMaterias: React.FC = () => {
                 )}
               </Box>
             )}
+            
+            <Modal
+              open = {openUpdateNotaModal}
+              onClose = {handleCloseUpdateNotaModal}
+              sx = {{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              >
+              <Box
+                sx = {{
+                  backgroundColor: "#00213A",
+                  padding: 4,
+                  borderRadius: 1,
+                  color: "#FFFFFF",
+                }}
+                >
+                <Typography variant = "h6">
+                  Atualizar Nota
+                </Typography>
+                <Typography sx = {{marginTop: 2}}>
+                  Informe a nova nota da matéria.
+                </Typography>
+                <TextField
+                  label = "Nota"
+                  variant = "outlined"
+                  fullWidth
+                  margin = "normal"
+                  value = {novaNota}
+                  onChange={(e) => setNovaNota(e.target.value)}
+                  error = {!novaNota}
+                  helperText = {!novaNota ? "Informe a nova nota." : ""}
+                  />
+                <Button
+                  onClick = {handleUpdateNota}
+                  sx = {{
+                    marginTop: 3,
+                    backgroundColor: "#0085EA",
+                    color: "#FFFFFF",
+                    "&:hover": {
+                      backgroundColor: "#006BB3",
+                    },
+                  }}
+                  >
+                    Atualizar
+                  </Button>
+                  <Button
+                    onClick = {handleCloseUpdateNotaModal}
+                    sx = {{
+                      marginTop: 3,
+                      marginLeft: 3,
+                    backgroundColor: "#0085EA",
+                    color: "#FFFFFF",
+                    "&:hover": {
+                      backgroundColor: "#006BB3",
+                    },
+                  }}
+                >
+                  Fechar
+                </Button>
+                </Box>
+              </Modal>
 
             <Modal
               open={openModal}

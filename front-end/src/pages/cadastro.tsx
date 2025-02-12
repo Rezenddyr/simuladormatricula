@@ -154,7 +154,7 @@ const Cadastro: React.FC = () => {
             <TextField
               label="Matrícula"
               variant="outlined"
-              fullWidth
+              fullWidth 
               margin="normal"
               value={matricula}
               onChange={(e) => setMatricula(e.target.value)}
