@@ -9,6 +9,7 @@ import {
   createTheme,
   CssBaseline,
   FormControl,
+  TextField,
   InputLabel,
   Select,
   MenuItem as MuiMenuItem,
@@ -49,6 +50,7 @@ const MinhasMaterias: React.FC = () => {
   const [anoIngresso, setAnoIngresso] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [schedule, setSchedule] = useState<{ [key: string]: string }>({});
+  const [notas, setNotas] = useState<{ [key: string]: string }>({}); // <-- Aqui
   const [materiasPorPeriodo, setMateriasPorPeriodo] = useState<{
     [key: number]: any[];
   }>({});
@@ -126,25 +128,27 @@ const MinhasMaterias: React.FC = () => {
       console.log("Status atual:", status);
       console.log("Ano atual:", year);
       console.log("Horários selecionados:", schedule);
-
+      console.log("Notas:", notas);
+  
       // Prepara os dados das matérias a serem salvas
       const materiasToSave = Object.keys(status).map((materia) => {
         const materiaData = Object.values(materiasPorPeriodo)
           .flat()
           .find((m) => m.nome === materia);
-
+  
         return {
           id_materia: materiaData?.codigo,
           status: status[materia],
           ano: year[materia] || null,
+          nota: status[materia] === "Feita" ? notas[materia] : null,
         };
       });
-
+  
       console.log("Dados enviados para o backend:", {
         id_aluno: matricula,
         materias: materiasToSave,
       });
-
+  
       // Faz a requisição para salvar as matérias
       const responseMaterias = await fetch(
         API.URL + "src/materias/saveMateriasFeitas.php",
@@ -159,23 +163,26 @@ const MinhasMaterias: React.FC = () => {
           }),
         }
       );
-
+  
       const dataMaterias = await responseMaterias.json();
-
+  
       // Verifica a resposta do servidor para as matérias
       if (responseMaterias.ok && !dataMaterias.error) {
         console.log("Matérias registradas com sucesso!");
         alert("Matérias registradas com sucesso!");
-
+  
         // Após salvar as matérias, salva os horários
-        if(Object.keys(schedule).length > 0){
-        await handleSaveHorarios();
+        if (Object.keys(schedule).length > 0) {
+          await handleSaveHorarios();
+        }
+  
+        // Após salvar as matérias, salva as notas
+        if (Object.keys(notas).length > 0) {
+          await handleSaveNotas();
         }
       } else {
         console.error("Erro ao salvar matérias:", dataMaterias.error);
-        alert(
-          "Erro ao registrar matérias, verifique campos e tente novamente."
-        );
+        alert("Erro ao registrar matérias, verifique campos e tente novamente.");
       }
     } catch (error) {
       console.error("Erro ao salvar matérias:", error);
@@ -338,6 +345,59 @@ const MinhasMaterias: React.FC = () => {
       ...prevYear,
       [subject]: newYear,
     }));
+  };
+
+  const handleSaveNotas = async () => {
+    try {
+      console.log("Notas a serem salvas:", notas);
+  
+      // Prepara os dados das notas a serem salvas
+      const notasToSave = Object.keys(notas).map((materia) => {
+        const materiaData = Object.values(materiasPorPeriodo)
+          .flat()
+          .find((m) => m.nome === materia);
+  
+        return {
+          id_materia: materiaData?.codigo,
+          nota: notas[materia],
+        };
+      });
+  
+      console.log("Dados enviados para o backend:", {
+        id_aluno: matricula,
+        notas: notasToSave,
+      });
+  
+      // Faz a requisição para salvar as notas
+      const responseNotas = await fetch(
+        API.URL + "src/matriculas/inserirNotas.php",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Adiciona o token de autenticação
+          },
+          body: JSON.stringify({
+            id_aluno: Number(matricula),
+            notas: notasToSave,
+          }),
+        }
+      );
+  
+      const dataNotas = await responseNotas.json();
+  
+      // Verifica a resposta do servidor para as notas
+      if (responseNotas.ok && !dataNotas.error) {
+        console.log("Notas registradas com sucesso!");
+        alert("Notas registradas com sucesso!");
+      } else {
+        console.error("Erro ao salvar notas:", dataNotas.error);
+        alert("Erro ao registrar notas, verifique campos e tente novamente.");
+      }
+    } catch (error) {
+      console.error("Erro ao salvar notas:", error);
+      alert("Erro de conexão ao registrar notas.");
+    }
   };
 
   useEffect(() => {
@@ -742,6 +802,63 @@ const MinhasMaterias: React.FC = () => {
                                   </FormControl>
                                 )}
 
+                                {status[materia.nome] === "Feita" && (
+                                  <TextField
+                                    label="Nota"
+                                    variant="outlined"
+                                    type="number"
+                                    value={notas[materia.nome] || ""}
+                                    onChange={(e) => {
+                                      let value = e.target.value;
+                                      // Garante que o valor está entre 0 e 100
+                                      if (Number(value) > 100) value = "100";
+                                      if (Number(value) < 0) value = "0";
+                                      
+                                      setNotas((prevNotas) => ({
+                                        ...prevNotas,
+                                        [materia.nome]: value,
+                                      }))
+                                    }}
+                                    inputProps={{
+                                      min: 0,
+                                      max: 100,
+                                      step: 1,
+                                    }}
+                                    sx={{
+                                      marginLeft: 1,
+                                      width: 160,
+                                      '& .MuiInputBase-root': {
+                                        height: 48,
+                                        color: "#0085EA",
+                                        '& fieldset': {
+                                          borderColor: "#0085EA",
+                                        },
+                                        '&:hover fieldset': {
+                                          borderColor: "#0056B3",
+                                        },
+                                        '&.Mui-focused fieldset': {
+                                          borderColor: "#003F7D",
+                                        },
+                                      },
+                                      '& .MuiInputLabel-root': {
+                                        color: "#0085EA",
+                                        '&.Mui-focused': {
+                                          color: "#0085EA",
+                                        },
+                                      },
+                                      '& .MuiOutlinedInput-input': {
+                                        '&::-webkit-inner-spin-button': {
+                                          WebkitAppearance: 'none',
+                                          margin: 0,
+                                        },
+                                        '&[type=number]': {
+                                          MozAppearance: 'textfield',
+                                        },
+                                      },
+                                    }}
+                                  />
+                                )}
+
                                 <Button
                                   variant="outlined"
                                   onClick={() => handleOpenModal(materia.nome)}
@@ -845,6 +962,11 @@ const MinhasMaterias: React.FC = () => {
                               <Typography>
                                 <strong>Status:</strong> {materia.status}
                               </Typography>
+                              {materia.status === "Feita" && (
+                                <Typography>
+                                  <strong>Nota:</strong> {materia.nota}
+                                </Typography>
+                              )}
                               <Button
                                 variant="outlined"
                                 sx={{
