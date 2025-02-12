@@ -76,7 +76,7 @@ const Header: React.FC = () => {
         <Box sx={{ flexGrow: 1 }} />
 
 
-        {/* <NotificationButton /> */}
+        <NotificationButton />
 
       </Toolbar>
     </AppBar>

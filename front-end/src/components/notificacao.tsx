@@ -22,11 +22,20 @@ const NotificationButton: React.FC = () => {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
-        setNotifications(data);
+        console.log('Fetched notifications:', data); // Log para depuração
+
+        // Verifica se a resposta contém a propriedade 'notificacoes' e se é um array
+        if (data && Array.isArray(data.notificacoes)) {
+          setNotifications(data.notificacoes);
+        } else {
+          console.error('Fetched data does not contain an array:', data);
+          setNotifications([]); // Define como array vazio se os dados não forem válidos
+        }
       } catch (error) {
         console.error('Error fetching notifications:', error);
+        setNotifications([]); // Define como array vazio em caso de erro
       } finally {
-        setLoading(false);
+        setLoading(false); // Finaliza o carregamento
       }
     };
 
@@ -55,16 +64,19 @@ const NotificationButton: React.FC = () => {
       >
         {loading ? (
           <MenuItem>
-            <CircularProgress size={24} />
+            <CircularProgress size={24} /> {/* Exibe um spinner enquanto carrega */}
           </MenuItem>
         ) : notifications.length === 0 ? (
           <MenuItem>
-            <ListItemText primary="No notifications" />
+            <ListItemText primary="No notifications" /> {/* Mensagem para lista vazia */}
           </MenuItem>
         ) : (
           notifications.map(notification => (
             <MenuItem key={notification.id} onClick={handleClose}>
-              <ListItemText primary={notification.mensagem} secondary={new Date(notification.criado_em).toLocaleString()} />
+              <ListItemText
+                primary={notification.mensagem}
+                secondary={new Date(notification.criado_em).toLocaleString()} // Formata a data
+              />
             </MenuItem>
           ))
         )}

@@ -189,7 +189,7 @@ const Dashboard: React.FC = () => {
     <Card
       sx={{
         width: 1000,
-        padding: 4,
+        padding: 2,
         backgroundColor: '#00213A',
         borderRadius: 2,
         boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.2)',
@@ -211,7 +211,7 @@ const Dashboard: React.FC = () => {
           <Grid item xs={12} md={6}>
             {/* Progresso Total */}
 
-            <Box sx={{ mb: 4 }}>
+            <Box sx={{ mb: 2 }}>
               <Typography variant="h6" sx={{ color: 'white', mb: 1 }}>
                 Progresso Total do Curso
               </Typography>
