@@ -64,7 +64,19 @@ const MinhasMaterias: React.FC = () => {
   };
 
   const [openUpdateNotaModal, setOpenUpdateNotaModal] = useState(false);
+  const [openModalDelete, setOpenModalDelete] = useState(false);
+
   const [novaNota, setNovaNota] = useState<string | null>(null);
+
+  const handleOpenDeleteModal = (idMateria) => {
+    setSelectedSubject(idMateria);
+    setOpenModalDelete(true);
+  }
+
+  const handleCloseModalDelete = () => {
+    setOpenModalDelete(false);
+    setSelectedSubject(null);
+  }
 
   const hadleOpenUpdateNotaModal = (idMateria) => {
     setSelectedSubject(idMateria);
@@ -284,7 +296,7 @@ const MinhasMaterias: React.FC = () => {
     }
   };
 
-  const handleDeleteMateria = async (idMateria) => {
+  const handleDeleteMateria = async () => {
     try {
       const response = await fetch(API.URL + "src/materias/MateriasAluno.php", {
         method: "POST",
@@ -294,7 +306,7 @@ const MinhasMaterias: React.FC = () => {
         body: JSON.stringify({
           action: "delete",
           id_aluno: Number(matricula),
-          id_materia: idMateria,
+          id_materia_feita: Number(selectedSubject),
         }),
       });
 
@@ -309,6 +321,7 @@ const MinhasMaterias: React.FC = () => {
     } catch (error) {
       console.error("Erro ao excluir a matéria:", error);
     }
+  handleCloseModalDelete();
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -396,6 +409,7 @@ const MinhasMaterias: React.FC = () => {
       console.error("Erro ao atualizar notas:", error);
       alert("Erro de conexão ao registrar notas.");
     }
+    handleCloseUpdateNotaModal();
   };
 
   useEffect(() => {
@@ -982,7 +996,7 @@ const MinhasMaterias: React.FC = () => {
                               <Button
                                 variant="outlined"
                                 color="error"
-                                onClick={() => handleDeleteMateria(materia.id)}
+                                onClick={() => handleOpenDeleteModal(materia.id)}
                                 sx={{
                                   marginTop: 1,
                                   marginLeft: 5,
@@ -1120,6 +1134,58 @@ const MinhasMaterias: React.FC = () => {
                 >
                   Fechar
                 </Button>
+              </Box>
+            </Modal>
+            <Modal
+              open={openModalDelete}
+              onClose={handleCloseModalDelete}
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Box
+                sx={{
+                  backgroundColor: "#00213A",
+                  padding: 4,
+                  borderRadius: 1,
+                  color: "#FFFFFF",
+                }}
+              >
+                <Typography variant="h6">
+                  Tem certeza que deseja excluir a matéria?
+                </Typography>
+                <Button
+                  onClick={handleCloseModalDelete}
+                  sx = {{
+                    marginTop: 3,
+                    backgroundColor: "#0085EA",
+                    color: "#FFFFFF",
+                    "&:hover": {
+                      backgroundColor: "#006BB3",
+                    },
+                  }}
+                  >
+                    Cancelar
+                  </Button>
+                <Button
+                  variant="outlined"
+                  color="error"
+                  onClick = {handleDeleteMateria}
+                  sx={{
+                    marginTop: 3,
+                    marginLeft: 5,
+                    borderColor: "#FF0000",
+                    color: "#FF0000",
+                    "&:hover": {
+                      borderColor: "#FF3333",
+                      color: "#FF3333",
+                    },
+                  }}
+                  >
+                    Excluir
+                  </Button>
               </Box>
             </Modal>
           </Box>

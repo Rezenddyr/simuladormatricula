@@ -59,22 +59,22 @@ try {
             error_log("Resultado da consulta: " . print_r($result, true));
         } elseif ($action === 'delete') {
             // Exclusão de uma matéria
-            if (!isset($dados['id_aluno'], $dados['id_materia'])) {
+            if (!isset($dados['id_aluno'], $dados['id_materia_feita'])) {
                 echo json_encode(['error' => 'ID do aluno ou ID da matéria não informado.']);
                 http_response_code(400);
                 exit;
             }
 
             $id_aluno = $dados['id_aluno'];
-            $id_materia = $dados['id_materia'];
+            $id_materia_feita = $dados['id_materia_feita'];
 
             $queryDelete = "
                 DELETE FROM materias_feitas
-                WHERE id_aluno = :id_aluno AND id_materia = :id_materia
+                WHERE id_aluno = :id_aluno AND id = :id
             ";
             $stmtDelete = $conn->prepare($queryDelete);
             $stmtDelete->bindParam(':id_aluno', $id_aluno, PDO::PARAM_INT);
-            $stmtDelete->bindParam(':id_materia', $id_materia, PDO::PARAM_STR);
+            $stmtDelete->bindParam(':id', $id_materia_feita, PDO::PARAM_STR);
             $stmtDelete->execute();
 
             if ($stmtDelete->rowCount() > 0) {
@@ -95,7 +95,7 @@ try {
 } catch (Exception $e) {
     // Log de erros
     error_log("Erro no servidor: " . $e->getMessage());
-    echo json_encode(['error' => 'Erro no servidor: ' . $e->getMessage()]);
+    echo json_encode(['error' => 'Erro no servidor: ' . $e->getMessage(), 'dados' => $dados]);
     http_response_code(500);
     exit;
 }
