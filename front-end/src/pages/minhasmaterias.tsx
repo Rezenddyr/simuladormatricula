@@ -203,9 +203,10 @@ const MinhasMaterias: React.FC = () => {
         }
   
         // Após salvar as matérias, salva as notas
-        if (Object.keys(notas).length > 0) {
-          await handleSaveNotas();
-        }
+        // if (Object.keys(notas).length > 0) {
+        //   await handleSaveNotas();
+        // } modificado para salvar com 1 requisição
+
       } else {
         console.error("Erro ao salvar matérias:", dataMaterias.error);
         alert("Erro ao registrar matérias, verifique campos e tente novamente.");
